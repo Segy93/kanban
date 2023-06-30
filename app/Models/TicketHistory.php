@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ticket extends Model
+class TicketHistory extends Model
 {
     use HasFactory;
 
@@ -20,6 +20,7 @@ class Ticket extends Model
         'status',
         'priority',
         'user_id',
+        'ticket_id',
     ];
 
     /**
@@ -33,5 +34,6 @@ class Ticket extends Model
         'status'      => 'int',
         'priority'    => 'int',
         'user_id'     => 'int',
+        'ticket_id'   => 'int',
     ];
 }

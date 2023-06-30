@@ -89,8 +89,8 @@ class TicketController extends Controller
     /**
      * Updating of single ticket
      *
-     * @param Request       $request
-     * @param int    $id
+     * @param Request   $request
+     * @param int       $id
      *
      * @return JsonResponse
      */
@@ -100,6 +100,8 @@ class TicketController extends Controller
         $validated = TicketService::validateDataUpdate($request, $id);
 
         if (!empty($ticket)) {
+            TicketService::createHistory($ticket);
+
             $ticket->title       = !empty($request->title)
                 ? $request->title : $ticket->title
             ;

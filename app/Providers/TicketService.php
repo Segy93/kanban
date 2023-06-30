@@ -3,9 +3,30 @@
 
 namespace App\Providers;
 
+use App\Models\Ticket;
+use App\Models\TicketHistory;
 use Illuminate\Http\Request;
 
 class TicketService {
+
+    /**
+     * Creates ticket history
+     *
+     * @param Ticket $ticket   Ticket
+     * @return void
+     */
+    public static function createHistory(Ticket $ticket): void {
+        $history = new TicketHistory();
+
+        $history->title       = $ticket->title;
+        $history->description = $ticket->description;
+        $history->priority    = $ticket->priority;
+        $history->status      = $ticket->status;
+        $history->user_id     = $ticket->user_id;
+        $history->ticket_id   = $ticket->id;
+
+        $history->save();
+    }
 
     /**
      * Data validation for ticket creating

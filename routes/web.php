@@ -23,17 +23,17 @@ Route::get('/', function () {
 
 
 /** create */
-Route::post('/tickets', [TicketController::class, 'store'])->middleware('auth');
+Route::post('/tickets', [TicketController::class, 'store']);
 
 /** read */
-Route::get('/tickets', [TicketController::class, 'index'])->middleware('auth');
-Route::get('/tickets/{id}', [TicketController::class, 'show'])->middleware('auth');
+Route::get('/tickets', [TicketController::class, 'index']);
+Route::get('/tickets/{id}', [TicketController::class, 'show']);
 
 /** update */
-Route::put('/tickets/{id}', [TicketController::class, 'update'])->middleware('auth');
+Route::put('/tickets/{id}', [TicketController::class, 'update']);
 
 /** delete */
-Route::delete('/tickets/{id}', [TicketController::class, 'delete'])->middleware('auth');
+Route::delete('/tickets/{id}', [TicketController::class, 'delete']);
 
 
 
@@ -47,14 +47,14 @@ Route::delete('/tickets/{id}', [TicketController::class, 'delete'])->middleware(
 
 
 /** create */
-Route::post('/users', [UserController::class, 'store'])->middleware('auth');
+Route::post('/users', [UserController::class, 'store']);
 
 /** read */
-Route::get('/users', [UserController::class, 'index'])->middleware('auth');
-Route::get('/users/{id}', [UserController::class, 'show'])->middleware('auth');
+Route::get('/users', [UserController::class, 'index']);
+Route::get('/users/{id}', [UserController::class, 'show']);
 
 /** update */
-Route::put('/users/{id}', [UserController::class, 'update'])->middleware('auth');
+Route::put('/users/{id}', [UserController::class, 'update']);
 
 /** delete */
-Route::delete('/users/{id}', [UserController::class, 'delete'])->middleware('auth');
+Route::delete('/users/{id}', [UserController::class, 'delete']);
