@@ -69,6 +69,30 @@ class TicketTest extends TestCase
     }
 
     /**
+     * Test searching of tickets
+     *
+     * @return void
+     */
+    public function testSearchReturnsDataInValidFormat(): void {
+        $ticket = Ticket::inRandomOrder()->first();
+        $this->json('get', "/tickets/search/$ticket->title")
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                '*' => [
+                    'id',
+                    'title',
+                    'description',
+                    'status',
+                    'priority',
+                    'created_at',
+                    'updated_at',
+                    'user_id',
+                ]
+            ]
+        );
+    }
+
+    /**
      * Test fetching single ticket successfully
      *
      * @return void

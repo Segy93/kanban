@@ -11,13 +11,14 @@ class UserService {
      * Data validation for users creating
      *
      * @param Request $request
+     *
      * @return array
      */
     public static function validateDataCreate(Request $request): array {
         return $request->validate([
-            'name'         => 'string|max:255|required',
-            'email'        => 'string|unique:users|max:255|required',
-            'password'     => 'string|max:255|required',
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|string|max:255|unique:users',
+            'password'     => 'required|string|max:255',
         ]);
     }
 
@@ -26,6 +27,7 @@ class UserService {
      *
      * @param Request $request
      * @param int     $id
+     *
      * @return array
      */
     public static function validateDataUpdate(Request $request, int $id): array {

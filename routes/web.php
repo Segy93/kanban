@@ -28,6 +28,7 @@ Route::post('/tickets', [TicketController::class, 'store']);
 /** read */
 Route::get('/tickets', [TicketController::class, 'index']);
 Route::get('/tickets/{id}', [TicketController::class, 'show']);
+Route::get('/tickets/search/{search}', [TicketController::class, 'search']);
 
 /** update */
 Route::put('/tickets/{id}', [TicketController::class, 'update']);
@@ -52,6 +53,7 @@ Route::post('/users', [UserController::class, 'store']);
 /** read */
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/{id}', [UserController::class, 'show']);
+Route::get('/users/search/{search}', [UserController::class, 'search']);
 
 /** update */
 Route::put('/users/{id}', [UserController::class, 'update']);

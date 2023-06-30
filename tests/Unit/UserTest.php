@@ -65,6 +65,28 @@ class UserTest extends TestCase
     }
 
     /**
+     * Test searching of users
+     *
+     * @return void
+     */
+    public function testSearchReturnsDataInValidFormat(): void {
+        $user = User::inRandomOrder()->first();
+        $this->json('get', "/users/search/$user->name")
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                '*' => [
+                    'id',
+                    'name',
+                    'email',
+                    'email_verified_at',
+                    'created_at',
+                    'updated_at',
+                ]
+            ]
+        );
+    }
+
+    /**
      * Tests fetching of single user
      *
      * @return void

@@ -13,6 +13,7 @@ class TicketService {
      * Creates ticket history
      *
      * @param Ticket $ticket   Ticket
+     *
      * @return void
      */
     public static function createHistory(Ticket $ticket): void {
@@ -32,6 +33,7 @@ class TicketService {
      * Data validation for ticket creating
      *
      * @param Request $request
+     *
      * @return array
      */
     public static function validateDataCreate(Request $request): array {
@@ -49,6 +51,7 @@ class TicketService {
      *
      * @param Request $request
      * @param int     $id
+     *
      * @return array
      */
     public static function validateDataUpdate(Request $request, int $id): array {

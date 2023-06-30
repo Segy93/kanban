@@ -77,6 +77,20 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Search users
+     *
+     * @param string $search    String user for searching
+     *
+     * @return JsonResponse
+     */
+    public function search(string $search): JsonResponse {
+        $users = User::where('name', 'like', '%' . $search . '%');
+        $users->orWhere('email', 'like', '%' . $search . '%');
+
+        return response()->json($users);
+    }
+
 
 
 

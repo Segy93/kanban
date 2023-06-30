@@ -76,6 +76,19 @@ class TicketController extends Controller
         }
     }
 
+    /**
+     * Search tickets
+     *
+     * @param string $search    String user for searching
+     *
+     * @return JsonResponse
+     */
+    public function search(string $search): JsonResponse {
+        $users = Ticket::where('title', 'like', '%' . $search . '%');
+
+        return response()->json($users);
+    }
+
 
 
 
