@@ -117,6 +117,7 @@ class TicketTest extends TestCase
                     'title'             => $ticket->title,
                     'description'       => $ticket->description,
                     'status'            => $ticket->status,
+                    'status_text'       => $ticket->status_text,
                     'priority'          => $ticket->priority,
                     'created_at'        => $ticket->created_at,
                     'updated_at'        => $ticket->updated_at,

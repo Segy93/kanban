@@ -9,6 +9,12 @@ class Ticket extends Model
 {
     use HasFactory;
 
+    private static $statuses = [
+        0 => 'To Do',
+        1 => 'In Progress',
+        2 => 'Done',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -34,4 +40,17 @@ class Ticket extends Model
         'priority'    => 'int',
         'user_id'     => 'int',
     ];
+
+    protected $appends = [
+        'status_text',
+    ];
+
+    /**
+     * Return status text
+     *
+     * @return string
+     */
+    public function getStatusTextAttribute(): string {
+        return self::$statuses[$this->status];
+    }
 }
