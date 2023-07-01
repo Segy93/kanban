@@ -234,11 +234,13 @@ class TicketTest extends TestCase
     public function testTicketUpdate404(): void {
         $faker = \Faker\Factory::create();
         $user = User::inRandomOrder()->first();
+        $priority = Ticket::inRandomOrder()->first()->priority;
         $payload = [
             'title'        => $faker->text,
             'description'  => $faker->text,
             'status'       => rand(0, 2),
-            'priority'     => Ticket::max('priority') + 1,
+            'priority_new' => $priority,
+            'priority_old' => $priority,
             'user_id'      => $user !== null ? $user->id : null,
         ];
         $ticket_id = Ticket::max('id') + 1;
@@ -270,7 +272,44 @@ class TicketTest extends TestCase
             'title'        => Str::random(257),
             'description'  => Str::random(257),
             'status'       => rand(3, 5),
-            'priority'     => Ticket::inRandomOrder()->first()->priority,
+            'priority_new' => Ticket::inRandomOrder()->first()->priority,
+            'priority_old' => $data['priority'],
+            'user_id'      => 'fail',
+        ];
+        $ticket = Ticket::create(
+            $data
+        );
+
+        $this->json('put', "tickets/$ticket->id", $payload)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'message',
+                'errors',
+            ])
+        ;
+    }
+
+    /**
+     * Tests if ticket update validation failed
+     *
+     * @return void
+     */
+    public function testTicketPriority404Failed(): void {
+        $user = User::inRandomOrder()->first();
+        $faker = \Faker\Factory::create();
+        $data = [
+            'title'        => $faker->text,
+            'description'  => $faker->text,
+            'status'       => rand(0, 2),
+            'priority'     => Ticket::max('priority') + 1,
+            'user_id'      => $user !== null ? $user->id : null,
+        ];
+        $payload = [
+            'title'        => Str::random(257),
+            'description'  => Str::random(257),
+            'status'       => rand(3, 5),
+            'priority_new' => Ticket::inRandomOrder()->first()->priority,
+            'priority_old' => Ticket::max('priority') + 1,
             'user_id'      => 'fail',
         ];
         $ticket = Ticket::create(

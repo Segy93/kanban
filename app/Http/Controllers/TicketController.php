@@ -125,17 +125,20 @@ class TicketController extends Controller
             $ticket->status      = !empty($request->status)
                 ? (int)$request->status : $ticket->status
             ;
-            $ticket->priority    = !empty($request->priority_new)
-                ? (int)$request->priority_new : $ticket->priority
-            ;
             if (!empty($request->priority_new)) {
-                TicketService::reorder((int)$request->priority_old, (int)$request->priority_new);
+                $reorder = TicketService::reorder((int)$request->priority_old, (int)$request->priority_new);
             }
             $ticket->user_id     = !empty($request->user_id)
                 ? (int)$request->user_id : $ticket->user_id
             ;
 
             $ticket->save();
+
+            if ($reorder === false) {
+                return response()->json([
+                    'message' => 'Ticket by priority not found'
+                ], Response::HTTP_NOT_FOUND);
+            }
 
             return response()->json([
                 'message' => 'Ticket updated'

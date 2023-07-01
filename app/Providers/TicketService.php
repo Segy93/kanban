@@ -76,9 +76,12 @@ class TicketService {
      * @return boolean
      */
     public static function reorder(int $priority_old, int $priority): bool {
-        $ticket = self::getTicketByPriority($priority_old);
         $return = false;
+        $ticket = self::getTicketByPriority($priority_old);
         $ticket = Ticket::find($ticket->id);
+        if (empty($ticket)) {
+            return $return;
+        }
         if ($ticket->priority !== $priority) {
             $increment  = $ticket->priority > $priority ? 1 : -1;
             $dir        = $ticket->priority > $priority ? 'desc' : 'asc';
