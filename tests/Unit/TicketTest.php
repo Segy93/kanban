@@ -18,12 +18,13 @@ class TicketTest extends TestCase
      */
     public function testTicketIsCreatedSuccessfully(): void {
         $faker = \Faker\Factory::create();
+        $user = User::inRandomOrder()->first();
         $payload = [
             'title'        => $faker->text,
             'description'  => $faker->text,
             'status'       => rand(0, 2),
             'priority'     => Ticket::max('priority') + 1,
-            'user_id'      => User::inRandomOrder()->first()->id,
+            'user_id'      => $user !== null ? $user->id : null,
         ];
         $this->json('post', '/tickets', $payload)
             ->assertStatus(Response::HTTP_CREATED)
@@ -99,13 +100,14 @@ class TicketTest extends TestCase
      */
     public function testTicketIsShownCorrectly(): void {
         $faker = \Faker\Factory::create();
+        $user = User::inRandomOrder()->first();
         $ticket = Ticket::create(
             [
                 'title'        => $faker->text,
                 'description'  => $faker->text,
                 'status'       => rand(0, 2),
                 'priority'     => Ticket::max('priority') + 1,
-                'user_id'      => User::inRandomOrder()->first()->id,
+                'user_id'      => $user !== null ? $user->id : null,
             ]
         );
 
@@ -160,12 +162,13 @@ class TicketTest extends TestCase
      */
     public function testUpdateTicketReturnsCorrectData() {
         $faker = \Faker\Factory::create();
+        $user = User::inRandomOrder()->first();
         $payload = [
             'title'        => $faker->text,
             'description'  => $faker->text,
             'status'       => rand(0, 2),
             'priority'     => Ticket::max('priority') + 1,
-            'user_id'      => User::inRandomOrder()->first()->id,
+            'user_id'      => $user !== null ? $user->id : null,
         ];
         $ticket = Ticket::create(
             $payload
@@ -186,12 +189,13 @@ class TicketTest extends TestCase
      */
     public function testTicketUpdate404(): void {
         $faker = \Faker\Factory::create();
+        $user = User::inRandomOrder()->first();
         $payload = [
             'title'        => $faker->text,
             'description'  => $faker->text,
             'status'       => rand(0, 2),
             'priority'     => Ticket::max('priority') + 1,
-            'user_id'      => User::inRandomOrder()->first()->id,
+            'user_id'      => $user !== null ? $user->id : null,
         ];
         $ticket_id = Ticket::max('id') + 1;
 
@@ -220,12 +224,13 @@ class TicketTest extends TestCase
      */
     public function testTicketIsDeleted() {
         $faker = \Faker\Factory::create();
+        $user = User::inRandomOrder()->first();
         $data = [
             'title'        => $faker->text,
             'description'  => $faker->text,
             'status'       => rand(0, 2),
             'priority'     => Ticket::max('priority') + 1,
-            'user_id'      => User::inRandomOrder()->first()->id,
+            'user_id'      => $user !== null ? $user->id : null,
         ];
         $ticket = Ticket::create(
             $data

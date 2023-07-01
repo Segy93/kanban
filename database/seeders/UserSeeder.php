@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Ticket;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class TicketSeeder extends Seeder
 {
@@ -15,10 +16,9 @@ class TicketSeeder extends Seeder
         $faker = \Faker\Factory::create();
         for ($i = 0; $i < 50; $i++) {
             Ticket::create([
-                'title'       => $faker->text,
-                'description' => $faker->text,
-                'status'      => rand(0, 2),
-                'priority'    => $i,
+                'name'      => $faker->name,
+                'email'     => $faker->unique()->email,
+                'password'  => Hash::make($faker->password),
             ]);
         }
     }
