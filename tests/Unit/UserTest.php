@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
@@ -36,7 +37,25 @@ class UserTest extends TestCase
         $this->assertDatabaseHas('users', $payload);
     }
 
-
+    /**
+     * Tests if user create validation failed
+     *
+     * @return void
+     */
+    public function testUserCreateValidationFailed(): void {
+        $payload = [
+            'name'     => Str::random(500),
+            'email'    => Str::random(300),
+            'password' => Str::random(200)
+        ];
+        $this->json('post', '/users', $payload)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'message',
+                'errors',
+            ])
+        ;
+    }
 
 
 
@@ -152,18 +171,18 @@ class UserTest extends TestCase
      */
     public function testUpdateUserReturnsCorrectData() {
         $faker = \Faker\Factory::create();
-        $payload = [
+        $data = [
             'name'     => $faker->name,
             'email'    => $faker->unique()->email,
             'password' => Hash::make($faker->password),
         ];
         $payload = [
-            'name'     => $faker->name,
-            'email'    => $faker->unique()->email,
-            'password' => Hash::make($faker->password),
+            'first_name' => $faker->firstName,
+            'last_name'  => $faker->lastName,
+            'email'      => $faker->email
         ];
         $user = User::create(
-            $payload
+            $data
         );
 
         $this->json('put', "users/$user->id", $payload)
@@ -194,6 +213,36 @@ class UserTest extends TestCase
                 'message',
             ]
         );
+    }
+
+    /**
+     * Tests if user update validation failed
+     *
+     * @return void
+     */
+    public function testUserUpdateValidationFailed(): void {
+        $faker = \Faker\Factory::create();
+        $data = [
+            'name'     => $faker->name,
+            'email'    => $faker->unique()->email,
+            'password' => Hash::make($faker->password),
+        ];
+        $payload = [
+            'name'     => Str::random(500),
+            'email'    => Str::random(300),
+            'password' => Str::random(200)
+        ];
+        $user = User::create(
+            $data
+        );
+
+        $this->json('put', "users/$user->id", $payload)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'message',
+                'errors',
+            ])
+        ;
     }
 
 

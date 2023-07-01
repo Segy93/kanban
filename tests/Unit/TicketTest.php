@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
@@ -39,6 +40,28 @@ class TicketTest extends TestCase
         $this->assertDatabaseHas('tickets', $payload);
     }
 
+    /**
+     * Tests if user create validation failed
+     *
+     * @return void
+     */
+    public function testTicketCreateValidationFailed(): void {
+        $faker = \Faker\Factory::create();
+        $payload = [
+            'title'        => Str::random(257),
+            'description'  => Str::random(257),
+            'status'       => rand(3, 5),
+            'priority'     => Ticket::max('priority'),
+            'user_id'      => 'fail',
+        ];
+        $this->json('post', '/users', $payload)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'message',
+                'errors',
+            ])
+        ;
+    }
 
 
 
@@ -216,6 +239,41 @@ class TicketTest extends TestCase
             ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJsonStructure([
                 'message',
+            ])
+        ;
+    }
+
+    /**
+     * Tests if ticket update validation failed
+     *
+     * @return void
+     */
+    public function testTicketUpdateValidationFailed(): void {
+        $user = User::inRandomOrder()->first();
+        $faker = \Faker\Factory::create();
+        $data = [
+            'title'        => $faker->text,
+            'description'  => $faker->text,
+            'status'       => rand(0, 2),
+            'priority'     => Ticket::max('priority') + 1,
+            'user_id'      => $user !== null ? $user->id : null,
+        ];
+        $payload = [
+            'title'        => Str::random(257),
+            'description'  => Str::random(257),
+            'status'       => rand(3, 5),
+            'priority'     => Ticket::inRandomOrder()->first()->priority,
+            'user_id'      => 'fail',
+        ];
+        $ticket = Ticket::create(
+            $data
+        );
+
+        $this->json('put', "tickets/$ticket->id", $payload)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'message',
+                'errors',
             ])
         ;
     }

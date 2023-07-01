@@ -23,6 +23,7 @@ class TicketController extends Controller
         $ticket = new Ticket();
 
         $validated = TicketService::validateDataCreate($request);
+
         $ticket->title       = $request->title;
         $ticket->description = $request->description;
         $ticket->priority    = (int)$request->priority;
