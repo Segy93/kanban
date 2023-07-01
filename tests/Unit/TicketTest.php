@@ -41,7 +41,7 @@ class TicketTest extends TestCase
     }
 
     /**
-     * Tests if user create validation failed
+     * Tests if ticket create validation failed
      *
      * @return void
      */
@@ -54,7 +54,7 @@ class TicketTest extends TestCase
             'priority'     => Ticket::max('priority'),
             'user_id'      => 'fail',
         ];
-        $this->json('post', '/users', $payload)
+        $this->json('post', '/tickets', $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'message',
