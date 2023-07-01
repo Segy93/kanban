@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /** CREATE */
+    // CREATE
 
     /**
      * Creating single user
@@ -43,7 +43,7 @@ class UserController extends Controller
 
 
 
-    /** READ */
+    // READ
 
     /**
      * Fetches all users
@@ -99,7 +99,7 @@ class UserController extends Controller
 
 
 
-    /** UPDATE */
+    // UPDATE
 
     /**
      * Updating of single user
@@ -144,7 +144,7 @@ class UserController extends Controller
 
 
 
-    /** DELETE */
+    // DELETE
 
     /**
      * Deleting single user

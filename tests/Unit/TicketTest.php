@@ -7,9 +7,12 @@ use App\Models\User;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 
+/**
+ * Tests for TicketController methods
+ */
 class TicketTest extends TestCase
 {
-    /** CREATE */
+    // CREATE
 
     /**
      * Test if ticket is created successfully
@@ -44,7 +47,7 @@ class TicketTest extends TestCase
 
 
 
-    /** READ */
+    // READ
 
     /**
      * Test of fetching all tickets successfully
@@ -111,6 +114,8 @@ class TicketTest extends TestCase
             ]
         );
 
+        $user = $ticket->user;
+
         $this->json('get', "tickets/$ticket->id")
             ->assertStatus(Response::HTTP_OK)
             ->assertExactJson([
@@ -119,11 +124,19 @@ class TicketTest extends TestCase
                     'title'             => $ticket->title,
                     'description'       => $ticket->description,
                     'status'            => $ticket->status,
-                    'status_text'       => $ticket->status_text,
+                    'status_name'       => $ticket->status_name,
                     'priority'          => $ticket->priority,
                     'created_at'        => $ticket->created_at,
                     'updated_at'        => $ticket->updated_at,
                     'user_id'           => $ticket->user_id,
+                    'user'              => [
+                        'id'                => $user->id,
+                        'name'              => $user->name,
+                        'email'             => $user->email,
+                        'email_verified_at' => $user->email_verified_at,
+                        'created_at'        => $user->created_at,
+                        'updated_at'        => $user->updated_at,
+                    ],
                 ]
             ]
         );
@@ -153,7 +166,7 @@ class TicketTest extends TestCase
 
 
 
-    /** UPDATE */
+    // UPDATE
 
     /**
      * Test of updating ticket successfully
@@ -215,7 +228,7 @@ class TicketTest extends TestCase
 
 
 
-    /** DELETE */
+    // DELETE
 
     /**
      * Test of deleting the ticket successfully

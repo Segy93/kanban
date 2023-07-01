@@ -19,21 +19,29 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+
+
+
+
+
+
+
 /** tickets */
 
 
-/** create */
+// CREATE
 Route::post('/tickets', [TicketController::class, 'store']);
 
-/** read */
+// READ
 Route::get('/tickets', [TicketController::class, 'index']);
 Route::get('/tickets/{id}', [TicketController::class, 'show']);
 Route::get('/tickets/search/{search}', [TicketController::class, 'search']);
 
-/** update */
+// UPDATE
 Route::put('/tickets/{id}', [TicketController::class, 'update']);
 
-/** delete */
+// DELETE
 Route::delete('/tickets/{id}', [TicketController::class, 'delete']);
 
 
@@ -47,16 +55,16 @@ Route::delete('/tickets/{id}', [TicketController::class, 'delete']);
 /** users */
 
 
-/** create */
+// CREATE
 Route::post('/users', [UserController::class, 'store']);
 
-/** read */
+// READ
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/users/{id}', [UserController::class, 'show']);
 Route::get('/users/search/{search}', [UserController::class, 'search']);
 
-/** update */
+// UPDATE
 Route::put('/users/{id}', [UserController::class, 'update']);
 
-/** delete */
+// DELETE
 Route::delete('/users/{id}', [UserController::class, 'delete']);

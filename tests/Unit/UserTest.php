@@ -7,9 +7,12 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
+/**
+ * Tests for UserController methods
+ */
 class UserTest extends TestCase
 {
-    /** CREATE */
+    // CREATE
 
     /**
      * Tests if user is created successfully
@@ -41,7 +44,7 @@ class UserTest extends TestCase
 
 
 
-    /** READ */
+    // READ
 
     /**
      * Tests fetching of all users
@@ -140,7 +143,7 @@ class UserTest extends TestCase
 
 
 
-    /** UPDATE */
+    // UPDATE
 
     /**
      * Tests if user is updated successfully
@@ -201,7 +204,7 @@ class UserTest extends TestCase
 
 
 
-    /** DELETE */
+    // DELETE
 
     /**
      * Tests if user is successfully deleted

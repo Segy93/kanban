@@ -10,7 +10,7 @@ use Illuminate\Http\Response;
 
 class TicketController extends Controller
 {
-    /** CREATE */
+    // CREATE
 
     /**
      * Creating single ticket
@@ -44,7 +44,7 @@ class TicketController extends Controller
 
 
 
-    /** READ */
+    // READ
 
     /**
      * Fetches all tickets
@@ -65,7 +65,7 @@ class TicketController extends Controller
      * @return JsonResponse
      */
     public function show(int $id): JsonResponse {
-        $ticket = Ticket::find($id);
+        $ticket = Ticket::where('id', $id)->with('user')->first();
 
         if (!empty($ticket)) {
             return response()->json([$ticket]);
@@ -97,7 +97,7 @@ class TicketController extends Controller
 
 
 
-    /** UPDATE */
+    // UPDATE
 
     /**
      * Updating of single ticket
@@ -151,7 +151,7 @@ class TicketController extends Controller
 
 
 
-    /** DELETE */
+    // DELETE
 
     /**
      * Deleting single record
