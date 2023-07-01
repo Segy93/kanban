@@ -49,9 +49,9 @@ class TicketService {
      *
      * @param integer $priority
      *
-     * @return Ticket
+     * @return Ticket|null
      */
-    private static function getTicketByPriority(int $priority): Ticket {
+    private static function getTicketByPriority(int $priority): ?Ticket {
         $ticket = Ticket::where('priority', $priority);
         return $ticket->first();
     }
@@ -78,10 +78,10 @@ class TicketService {
     public static function reorder(int $priority_old, int $priority): bool {
         $return = false;
         $ticket = self::getTicketByPriority($priority_old);
-        $ticket = Ticket::find($ticket->id);
         if (empty($ticket)) {
             return $return;
         }
+        $ticket = Ticket::find($ticket->id);
         if ($ticket->priority !== $priority) {
             $increment  = $ticket->priority > $priority ? 1 : -1;
             $dir        = $ticket->priority > $priority ? 'desc' : 'asc';

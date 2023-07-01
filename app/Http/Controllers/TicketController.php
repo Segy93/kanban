@@ -53,7 +53,7 @@ class TicketController extends Controller
      * @return JsonResponse
      */
     public function index(): JsonResponse {
-        $tickets = Ticket::all();
+        $tickets = Ticket::orderBy('priority')->get();
 
         return response()->json($tickets);
     }

@@ -313,24 +313,23 @@ class TicketTest extends TestCase
             'priority'     => Ticket::max('priority') + 1,
             'user_id'      => $user !== null ? $user->id : null,
         ];
-        $payload = [
-            'title'        => Str::random(257),
-            'description'  => Str::random(257),
-            'status'       => rand(3, 5),
-            'priority_new' => Ticket::inRandomOrder()->first()->priority,
-            'priority_old' => Ticket::max('priority') + 1,
-            'user_id'      => 'fail',
-        ];
         $ticket = Ticket::create(
             $data
         );
+        $payload = [
+            'title'        => $faker->text,
+            'description'  => $faker->text,
+            'status'       => rand(0, 2),
+            'priority_new' => Ticket::inRandomOrder()->first()->priority,
+            'priority_old' => Ticket::max('priority') + 1,
+            'user_id'      => $user !== null ? $user->id : null,
+        ];
 
         $this->actingAs(User::inRandomOrder()->first())
             ->json('put', "tickets/$ticket->id", $payload)
-            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJsonStructure([
                 'message',
-                'errors',
             ])
         ;
     }
