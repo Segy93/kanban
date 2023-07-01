@@ -19,7 +19,7 @@ class TicketTest extends TestCase
     public function testTicketIsCreatedSuccessfully(): void {
         $faker = \Faker\Factory::create();
         $payload = [
-            'title'        => $faker->title,
+            'title'        => $faker->text,
             'description'  => $faker->text,
             'status'       => rand(0, 2),
             'priority'     => Ticket::max('priority') + 1,
@@ -101,7 +101,7 @@ class TicketTest extends TestCase
         $faker = \Faker\Factory::create();
         $ticket = Ticket::create(
             [
-                'title'        => $faker->title,
+                'title'        => $faker->text,
                 'description'  => $faker->text,
                 'status'       => rand(0, 2),
                 'priority'     => Ticket::max('priority') + 1,
@@ -161,7 +161,7 @@ class TicketTest extends TestCase
     public function testUpdateTicketReturnsCorrectData() {
         $faker = \Faker\Factory::create();
         $payload = [
-            'title'        => $faker->title,
+            'title'        => $faker->text,
             'description'  => $faker->text,
             'status'       => rand(0, 2),
             'priority'     => Ticket::max('priority') + 1,
@@ -187,7 +187,7 @@ class TicketTest extends TestCase
     public function testTicketUpdate404(): void {
         $faker = \Faker\Factory::create();
         $payload = [
-            'title'        => $faker->title,
+            'title'        => $faker->text,
             'description'  => $faker->text,
             'status'       => rand(0, 2),
             'priority'     => Ticket::max('priority') + 1,
@@ -221,7 +221,7 @@ class TicketTest extends TestCase
     public function testTicketIsDeleted() {
         $faker = \Faker\Factory::create();
         $data = [
-            'title'        => $faker->title,
+            'title'        => $faker->text,
             'description'  => $faker->text,
             'status'       => rand(0, 2),
             'priority'     => Ticket::max('priority') + 1,
