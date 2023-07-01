@@ -80,7 +80,7 @@ class UserController extends Controller
     /**
      * Search users
      *
-     * @param string $search    String user for searching
+     * @param string $search    String used for searching
      *
      * @return JsonResponse
      */
@@ -169,4 +169,3 @@ class UserController extends Controller
         }
     }
 }
-

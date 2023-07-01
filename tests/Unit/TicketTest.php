@@ -30,7 +30,8 @@ class TicketTest extends TestCase
             'priority'     => Ticket::max('priority') + 1,
             'user_id'      => $user !== null ? $user->id : null,
         ];
-        $this->json('post', '/tickets', $payload)
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('post', '/tickets', $payload)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonStructure([
                 'message',
@@ -54,7 +55,8 @@ class TicketTest extends TestCase
             'priority'     => Ticket::max('priority'),
             'user_id'      => 'fail',
         ];
-        $this->json('post', '/tickets', $payload)
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('post', '/tickets', $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'message',
@@ -78,7 +80,8 @@ class TicketTest extends TestCase
      * @return void
      */
     public function testIndexReturnsDataInValidFormat(): void {
-        $this->json('get', '/tickets')
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('get', '/tickets')
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
                 '*' => [
@@ -100,9 +103,10 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testSearchReturnsDataInValidFormat(): void {
+    public function testSearchTicketReturnsDataInValidFormat(): void {
         $ticket = Ticket::inRandomOrder()->first();
-        $this->json('get', "/tickets/search/$ticket->title")
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('get', "/tickets/search/$ticket->title")
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
                 '*' => [
@@ -139,7 +143,8 @@ class TicketTest extends TestCase
 
         $user = $ticket->user;
 
-        $this->json('get', "tickets/$ticket->id")
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('get', "tickets/$ticket->id")
             ->assertStatus(Response::HTTP_OK)
             ->assertExactJson([
                 [
@@ -173,7 +178,8 @@ class TicketTest extends TestCase
     public function testTicketIsShown404(): void {
         $ticket_id = Ticket::max('id') + 1;
 
-        $this->json('get', "tickets/$ticket_id")
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('get', "tickets/$ticket_id")
             ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJsonStructure([
                 'message',
@@ -218,7 +224,8 @@ class TicketTest extends TestCase
             $data
         );
 
-        $this->json('put', "tickets/$ticket->id", $payload)
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('put', "tickets/$ticket->id", $payload)
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
                 'message',
@@ -245,7 +252,8 @@ class TicketTest extends TestCase
         ];
         $ticket_id = Ticket::max('id') + 1;
 
-        $this->json('put', "tickets/$ticket_id", $payload)
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('put', "tickets/$ticket_id", $payload)
             ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJsonStructure([
                 'message',
@@ -280,7 +288,8 @@ class TicketTest extends TestCase
             $data
         );
 
-        $this->json('put', "tickets/$ticket->id", $payload)
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('put', "tickets/$ticket->id", $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'message',
@@ -316,7 +325,8 @@ class TicketTest extends TestCase
             $data
         );
 
-        $this->json('put', "tickets/$ticket->id", $payload)
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('put', "tickets/$ticket->id", $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'message',
@@ -354,7 +364,8 @@ class TicketTest extends TestCase
             $data
         );
 
-        $this->json('delete', "tickets/$ticket->id")
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('delete', "tickets/$ticket->id")
             ->assertStatus(Response::HTTP_NO_CONTENT);
         $this->assertDatabaseMissing('tickets', $data);
     }
@@ -367,7 +378,8 @@ class TicketTest extends TestCase
     public function testTicketDelete404(): void {
         $ticket_id = Ticket::max('id') + 1;
 
-        $this->json('delete', "tickets/$ticket_id")
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('delete', "tickets/$ticket_id")
             ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJsonStructure([
                 'message',
