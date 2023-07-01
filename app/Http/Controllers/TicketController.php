@@ -125,9 +125,12 @@ class TicketController extends Controller
             $ticket->status      = !empty($request->status)
                 ? (int)$request->status : $ticket->status
             ;
-            $ticket->priority    = !empty($request->priority)
-                ? (int)$request->priority : $ticket->priority
+            $ticket->priority    = !empty($request->priority_new)
+                ? (int)$request->priority_new : $ticket->priority
             ;
+            if (!empty($request->priority_new)) {
+                TicketService::reorder((int)$request->priority_old, (int)$request->priority_new);
+            }
             $ticket->user_id     = !empty($request->user_id)
                 ? (int)$request->user_id : $ticket->user_id
             ;

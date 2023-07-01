@@ -5,6 +5,9 @@ namespace App\Providers;
 
 use Illuminate\Http\Request;
 
+/**
+ * Service for user validation
+ */
 class UserService {
 
     /**

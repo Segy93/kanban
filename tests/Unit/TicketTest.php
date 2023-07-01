@@ -199,15 +199,23 @@ class TicketTest extends TestCase
     public function testUpdateTicketReturnsCorrectData() {
         $faker = \Faker\Factory::create();
         $user = User::inRandomOrder()->first();
-        $payload = [
+        $data = [
             'title'        => $faker->text,
             'description'  => $faker->text,
             'status'       => rand(0, 2),
             'priority'     => Ticket::max('priority') + 1,
             'user_id'      => $user !== null ? $user->id : null,
         ];
+        $payload = [
+            'title'        => $faker->text,
+            'description'  => $faker->text,
+            'status'       => rand(0, 2),
+            'priority_new' => Ticket::inRandomOrder()->first()->priority,
+            'priority_old' => $data['priority'],
+            'user_id'      => $user !== null ? $user->id : null,
+        ];
         $ticket = Ticket::create(
-            $payload
+            $data
         );
 
         $this->json('put', "tickets/$ticket->id", $payload)

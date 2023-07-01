@@ -7,7 +7,12 @@ use App\Models\Ticket;
 use App\Models\TicketHistory;
 use Illuminate\Http\Request;
 
+/**
+ * Service for managing tickets
+ */
 class TicketService {
+
+    // CREATE
 
     /**
      * Creates ticket history
@@ -28,6 +33,86 @@ class TicketService {
 
         $history->save();
     }
+
+
+
+
+
+
+
+
+
+    // READ
+
+    /**
+     * Gets ticket by priority
+     *
+     * @param integer $priority
+     *
+     * @return Ticket
+     */
+    private static function getTicketByPriority(int $priority): Ticket {
+        $ticket = Ticket::where('priority', $priority);
+        return $ticket->first();
+    }
+
+
+
+
+
+
+
+
+
+    // UPDATE
+
+    /**
+     * Ticket priority reorder
+     *
+     * @param integer $ticket_id       Ticket id
+     * @param integer $priority_old    Old ticket priority (position)
+     * @param integer $priority        New ticket priority (position)
+     *
+     * @return boolean
+     */
+    public static function reorder(int $priority_old, int $priority): bool {
+        $ticket = self::getTicketByPriority($priority_old);
+        $return = false;
+        $ticket = Ticket::find($ticket->id);
+        if ($ticket->priority !== $priority) {
+            $increment  = $ticket->priority > $priority ? 1 : -1;
+            $dir        = $ticket->priority > $priority ? 'desc' : 'asc';
+            $range      = $ticket->priority > $priority ? [$priority, $ticket->priority] : [$ticket->priority + 1, $priority];
+
+            $ticket->priority = 0;
+            $ticket->save();
+
+            $tickets = Ticket::whereBetween('priority', $range)
+                ->orderBy('priority', $dir)
+                ->get()
+            ;
+            foreach ($tickets as $i) {
+                $i->priority += $increment;
+                $i->save();
+            }
+
+            $ticket->priority = $priority;
+            $ticket->save();
+            $return = true;
+        }
+
+        return $return;
+    }
+
+
+
+
+
+
+
+
+
+    // Validation
 
     /**
      * Data validation for ticket creating
@@ -56,10 +141,10 @@ class TicketService {
      */
     public static function validateDataUpdate(Request $request, int $id): array {
         return $request->validate([
-            'title'        => 'string|max:255',
-            'description'  => 'string|max:255',
-            'priority'     => 'integer|unique:tickets,priority,' . $id,
-            'status'       => 'integer|max:2',
+            'title'        => 'string|nullable|max:255',
+            'description'  => 'string|nullable|max:255',
+            'priority'     => 'integer|nullable|unique:tickets,priority,' . $id,
+            'status'       => 'integer|nullable|max:2',
             'user_id'      => 'integer|nullable',
         ]);
     }
