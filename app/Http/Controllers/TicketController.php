@@ -129,6 +129,7 @@ class TicketController extends Controller
             if (!is_null($validated['priority_new'])) {
                 $reorder = TicketService::reorder($validated['priority_old'], $validated['priority_new']);
             }
+            /** user_id mandatory parameter since user can be unassigned, then the value is null */
             $ticket->user_id = $validated['user_id'];
 
             $ticket->save();
