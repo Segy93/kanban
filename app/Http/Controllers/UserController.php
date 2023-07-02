@@ -8,7 +8,6 @@ use App\Providers\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 
 /** CRUD methods for managing users */
 class UserController extends Controller
@@ -121,15 +120,15 @@ class UserController extends Controller
                     'message' => 'Forbidden update of user.'
                 ], Response::HTTP_FORBIDDEN);
             }
-            $user->name      = is_null($validated['name'])
-                ? $user->name : $validated['name']
-            ;
-            $user->email     = is_null($validated['email'])
-                ? $user->email : $validated['email']
-            ;
-            $user->password  = is_null($validated['password'])
-                ? $user->password : $validated['password']
-            ;
+            if ($validated['name'] !== null) {
+                $user->name = $validated['name'];
+            }
+            if ($validated['email'] !== null) {
+                $user->email = $validated['email'];
+            }
+            if ($validated['password'] !== null) {
+                $user->password = $validated['password'];
+            }
 
             $user->save();
 

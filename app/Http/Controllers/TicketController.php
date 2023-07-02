@@ -117,21 +117,19 @@ class TicketController extends Controller
         if (!empty($ticket)) {
             TicketService::createHistory($ticket);
 
-            $ticket->title       = is_null($validated['title'])
-                ? $ticket->title : $validated['title']
-            ;
-            $ticket->description = is_null($validated['description'])
-                ? $ticket->description : $validated['title']
-            ;
-            $ticket->status      = is_null($validated['status'])
-                ? $ticket->status : $validated['status']
-            ;
+            if ($validated['title'] !== null) {
+                $ticket->title = $validated['title'];
+            }
+            if ($validated['description'] !== null) {
+                $ticket->description = $validated['description'];
+            }
+            if ($validated['status'] !== null) {
+                $ticket->status = $validated['status'];
+            }
             if (!is_null($validated['priority_new'])) {
                 $reorder = TicketService::reorder($validated['priority_old'], $validated['priority_new']);
             }
-            $ticket->user_id     = is_null($validated['user_id'])
-                ? $ticket->user_id : $validated['user_id']
-            ;
+            $ticket->user_id = $validated['user_id'];
 
             $ticket->save();
 
