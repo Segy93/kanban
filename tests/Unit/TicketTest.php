@@ -26,9 +26,9 @@ class TicketTest extends TestCase
         $payload = [
             'title'        => $faker->text,
             'description'  => $faker->text,
-            'status'       => rand(0, 2),
+            'status'       => array_rand(Ticket::getStatuses()),
             'priority'     => Ticket::max('priority') + 1,
-            'user_id'      => $user !== null ? $user->id : null,
+            'user_id'      => $user?->id ?? null,
         ];
         $this->actingAs(User::inRandomOrder()->first())
             ->json('post', '/tickets', $payload)
@@ -135,9 +135,9 @@ class TicketTest extends TestCase
             [
                 'title'        => $faker->text,
                 'description'  => $faker->text,
-                'status'       => rand(0, 2),
+                'status'       => array_rand(Ticket::getStatuses()),
                 'priority'     => Ticket::max('priority') + 1,
-                'user_id'      => $user !== null ? $user->id : null,
+                'user_id'      => $user?->id ?? null,
             ]
         );
 
@@ -208,17 +208,17 @@ class TicketTest extends TestCase
         $data = [
             'title'        => $faker->text,
             'description'  => $faker->text,
-            'status'       => rand(0, 2),
+            'status'       => array_rand(Ticket::getStatuses()),
             'priority'     => Ticket::max('priority') + 1,
-            'user_id'      => $user !== null ? $user->id : null,
+            'user_id'      => $user?->id ?? null,
         ];
         $payload = [
             'title'        => $faker->text,
             'description'  => $faker->text,
-            'status'       => rand(0, 2),
+            'status'       => array_rand(Ticket::getStatuses()),
             'priority_new' => Ticket::inRandomOrder()->first()->priority,
             'priority_old' => $data['priority'],
-            'user_id'      => $user !== null ? $user->id : null,
+            'user_id'      => $user?->id ?? null,
         ];
         $ticket = Ticket::create(
             $data
@@ -245,10 +245,10 @@ class TicketTest extends TestCase
         $payload = [
             'title'        => $faker->text,
             'description'  => $faker->text,
-            'status'       => rand(0, 2),
+            'status'       => array_rand(Ticket::getStatuses()),
             'priority_new' => $priority,
-            'priority_old' => $priority,
-            'user_id'      => $user !== null ? $user->id : null,
+            'priority_old' => Ticket::max('priority') + 1,
+            'user_id'      => $user?->id ?? null,
         ];
         $ticket_id = Ticket::max('id') + 1;
 
@@ -272,9 +272,9 @@ class TicketTest extends TestCase
         $data = [
             'title'        => $faker->text,
             'description'  => $faker->text,
-            'status'       => rand(0, 2),
+            'status'       => array_rand(Ticket::getStatuses()),
             'priority'     => Ticket::max('priority') + 1,
-            'user_id'      => $user !== null ? $user->id : null,
+            'user_id'      => $user?->id ?? null,
         ];
         $payload = [
             'title'        => Str::random(257),
@@ -309,9 +309,9 @@ class TicketTest extends TestCase
         $data = [
             'title'        => $faker->text,
             'description'  => $faker->text,
-            'status'       => rand(0, 2),
+            'status'       => array_rand(Ticket::getStatuses()),
             'priority'     => Ticket::max('priority') + 1,
-            'user_id'      => $user !== null ? $user->id : null,
+            'user_id'      => $user?->id ?? null,
         ];
         $ticket = Ticket::create(
             $data
@@ -319,10 +319,10 @@ class TicketTest extends TestCase
         $payload = [
             'title'        => $faker->text,
             'description'  => $faker->text,
-            'status'       => rand(0, 2),
+            'status'       => array_rand(Ticket::getStatuses()),
             'priority_new' => Ticket::inRandomOrder()->first()->priority,
             'priority_old' => Ticket::max('priority') + 1,
-            'user_id'      => $user !== null ? $user->id : null,
+            'user_id'      => $user?->id ?? null,
         ];
 
         $this->actingAs(User::inRandomOrder()->first())
@@ -355,9 +355,9 @@ class TicketTest extends TestCase
         $data = [
             'title'        => $faker->text,
             'description'  => $faker->text,
-            'status'       => rand(0, 2),
+            'status'       => array_rand(Ticket::getStatuses()),
             'priority'     => Ticket::max('priority') + 1,
-            'user_id'      => $user !== null ? $user->id : null,
+            'user_id'      => $user?->id ?? null,
         ];
         $ticket = Ticket::create(
             $data

@@ -17,7 +17,7 @@ class TicketSeeder extends Seeder
             Ticket::create([
                 'title'       => $faker->text,
                 'description' => $faker->text,
-                'status'      => rand(0, 2),
+                'status'      => array_rand(Ticket::getStatuses()),
                 'priority'    => $i,
             ]);
         }

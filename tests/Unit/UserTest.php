@@ -183,9 +183,9 @@ class UserTest extends TestCase
             'password' => Hash::make($faker->password),
         ];
         $payload = [
-            'first_name' => $faker->firstName,
-            'last_name'  => $faker->lastName,
-            'email'      => $faker->email
+            'name'     => $faker->name,
+            'email'    => $faker->unique()->email,
+            'password' => Hash::make($faker->password),
         ];
         $user = User::create(
             $data

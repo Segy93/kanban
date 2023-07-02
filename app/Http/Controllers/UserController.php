@@ -24,9 +24,9 @@ class UserController extends Controller
         $validated = UserService::validateDataCreate($request);
         $user = new User();
 
-        $user->name     = $request->name;
-        $user->email    = $request->email;
-        $user->password = Hash::make($request->password);
+        $user->name     = $validated['name'];
+        $user->email    = $validated['email'];
+        $user->password = Hash::make($validated['password']);
 
         $user->save();
 
@@ -114,14 +114,14 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!empty($user)) {
-            $user->name      = !empty($request->name)
-                ? $request->name : $user->name
+            $user->name      = is_null($validated['name'])
+                ? $user->name : $validated['name']
             ;
-            $user->email     = !empty($request->email)
-                ? $request->email : $user->email
+            $user->email     = is_null($validated['email'])
+                ? $user->email : $validated['email']
             ;
-            $user->password  = !empty($request->password)
-                ? Hash::make($request->password) : $user->password
+            $user->password  = is_null($validated['password'])
+                ? $user->password : Hash::make($validated['password'])
             ;
 
             $user->save();

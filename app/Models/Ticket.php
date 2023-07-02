@@ -63,6 +63,15 @@ class Ticket extends Model
         return self::$statuses[$this->status];
     }
 
+    /**
+     * Returns array of statuses
+     *
+     * @return array
+     */
+    public static function getStatuses(): array {
+        return self::$statuses;
+    }
+
 
 
 

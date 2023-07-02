@@ -24,11 +24,11 @@ class TicketController extends Controller
 
         $validated = TicketService::validateDataCreate($request);
 
-        $ticket->title       = $request->title;
-        $ticket->description = $request->description;
-        $ticket->priority    = (int)$request->priority;
-        $ticket->status      = (int)$request->status;
-        $ticket->user_id     = (int)$request->user_id;
+        $ticket->title       = $validated['title'];
+        $ticket->description = $validated['description'];
+        $ticket->priority    = $validated['priority'];
+        $ticket->status      = $validated['status'];
+        $ticket->user_id     = $validated['user_id'];
 
         $ticket->save();
 
@@ -116,20 +116,20 @@ class TicketController extends Controller
         if (!empty($ticket)) {
             TicketService::createHistory($ticket);
 
-            $ticket->title       = !empty($request->title)
-                ? $request->title : $ticket->title
+            $ticket->title       = is_null($validated['title'])
+                ? $ticket->title : $validated['title']
             ;
-            $ticket->description = !empty($request->description)
-                ? $request->description : $ticket->description
+            $ticket->description = is_null($validated['description'])
+                ? $ticket->description : $validated['title']
             ;
-            $ticket->status      = !empty($request->status)
-                ? (int)$request->status : $ticket->status
+            $ticket->status      = is_null($validated['status'])
+                ? $ticket->status : $validated['status']
             ;
-            if (!empty($request->priority_new)) {
-                $reorder = TicketService::reorder((int)$request->priority_old, (int)$request->priority_new);
+            if (!is_null($validated['priority_new'])) {
+                $reorder = TicketService::reorder($validated['priority_old'], $validated['priority_new']);
             }
-            $ticket->user_id     = !empty($request->user_id)
-                ? (int)$request->user_id : $ticket->user_id
+            $ticket->user_id     = is_null($validated['user_id'])
+                ? $ticket->user_id : $validated['user_id']
             ;
 
             $ticket->save();

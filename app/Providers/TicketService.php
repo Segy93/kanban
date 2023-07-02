@@ -146,7 +146,8 @@ class TicketService {
         return $request->validate([
             'title'        => 'string|nullable|max:255',
             'description'  => 'string|nullable|max:255',
-            'priority'     => 'integer|nullable|unique:tickets,priority,' . $id,
+            'priority_old' => 'integer|nullable|unique:tickets,priority,' . $id,
+            'priority_new' => 'integer|nullable',
             'status'       => 'integer|nullable|max:2',
             'user_id'      => 'integer|nullable',
         ]);
