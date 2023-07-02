@@ -13,7 +13,11 @@ use Illuminate\Support\Facades\Auth;
 class LoginController extends Controller
 {
     /**
-     * Handle an authentication attempt.
+     * Handle authentication attempt
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function authenticate(Request $request): JsonResponse
     {
