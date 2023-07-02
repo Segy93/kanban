@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Providers\PermissionService;
 use App\Providers\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -115,7 +116,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!empty($user)) {
-            if (Auth::id() !== $id) {
+            if (!PermissionService::checkIfUserIsAllowed($id)) {
                 return response()->json([
                     'message' => 'Forbidden update of user.'
                 ], Response::HTTP_FORBIDDEN);
@@ -163,7 +164,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!empty($user)) {
-            if (Auth::id() !== $id) {
+            if (!PermissionService::checkIfUserIsAllowed($id)) {
                 return response()->json([
                     'message' => 'Forbidden delete of user.'
                 ], Response::HTTP_FORBIDDEN);
