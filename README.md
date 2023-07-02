@@ -16,3 +16,19 @@ cd /tmp/install
 
 
 PS. Shell script is for installing lamp stack and cloning github project
+
+
+
+
+
+
+
+
+
+
+
+Project thoughts
+
+The project contains migrations for users, tickets and ticket history, crud endpoints for users, tickets as well as search and authentication route. Ticket history is created each time before update. Since middleware for protection isn't specified I decided to use Laravel Auth because it is integrated in framework. The project functions the same as github projects where users can assign and manage tickets, however users are not permitted to delete other users and change each others data.
+
+There is also room for expansion. For example status table can be added as well as crud endpoints for it so there can be more than 3 lanes or less. Also some sort of roles and permissions for users where users can have permissions for certain tasks, but are not permitted to do others. There can also be many to many relationship between users and tickets so more users can be added to one task, etc.

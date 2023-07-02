@@ -28,7 +28,7 @@ class UserTest extends TestCase
             'password' => $faker->password
         ];
         $this->actingAs(User::inRandomOrder()->first())
-            ->json('post', '/users', $payload)
+            ->json('post', '/api/users', $payload)
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonStructure([
                 'message',
@@ -50,7 +50,7 @@ class UserTest extends TestCase
             'password' => Str::random(200)
         ];
         $this->actingAs(User::inRandomOrder()->first())
-            ->json('post', '/users', $payload)
+            ->json('post', '/api/users', $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'message',
@@ -74,7 +74,7 @@ class UserTest extends TestCase
      */
     public function testIndexReturnsDataInValidFormat(): void {
         $this->actingAs(User::inRandomOrder()->first())
-            ->json('get', '/users')
+            ->json('get', '/api/users')
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
                 '*' => [
@@ -97,7 +97,7 @@ class UserTest extends TestCase
     public function testSearchUserReturnsDataInValidFormat(): void {
         $user = User::inRandomOrder()->first();
         $this->actingAs(User::inRandomOrder()->first())
-            ->json('get', "/users/search/$user->name")
+            ->json('get', "/api/users/search/$user->name")
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
                 '*' => [
@@ -128,7 +128,7 @@ class UserTest extends TestCase
         );
 
         $this->actingAs(User::inRandomOrder()->first())
-            ->json('get', "users/$user->id")
+            ->json('get', "api/users/$user->id")
             ->assertStatus(Response::HTTP_OK)
             ->assertExactJson([
                 [
@@ -152,7 +152,7 @@ class UserTest extends TestCase
         $user_id = User::max('id') + 1;
 
         $this->actingAs(User::inRandomOrder()->first())
-            ->json('get', "users/$user_id")
+            ->json('get', "/api/users/$user_id")
             ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJsonStructure([
                 'message',
@@ -192,7 +192,7 @@ class UserTest extends TestCase
         );
 
         $this->actingAs($user)
-            ->json('put', "users/$user->id", $payload)
+            ->json('put', "/api/users/$user->id", $payload)
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
                 'message',
@@ -215,7 +215,7 @@ class UserTest extends TestCase
             'password' => $faker->password,
         ];
         $this->actingAs(User::inRandomOrder()->first())
-            ->json('put', "users/$user_id", $payload)
+            ->json('put', "/api/users/$user_id", $payload)
             ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJsonStructure([
                 'message',
@@ -245,7 +245,7 @@ class UserTest extends TestCase
         );
 
         $this->actingAs($user)
-            ->json('put', "users/$user->id", $payload)
+            ->json('put', "/api/users/$user->id", $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'message',
@@ -277,7 +277,7 @@ class UserTest extends TestCase
         );
 
         $this->actingAs($random_user)
-            ->json('put', "users/$user->id", $payload)
+            ->json('put', "/api/users/$user->id", $payload)
             ->assertStatus(Response::HTTP_FORBIDDEN)
             ->assertJsonStructure([
                 'message',
@@ -312,7 +312,7 @@ class UserTest extends TestCase
         );
 
         $this->actingAs($user)
-            ->json('delete', "users/$user->id")
+            ->json('delete', "/api/users/$user->id")
             ->assertStatus(Response::HTTP_NO_CONTENT);
         $this->assertDatabaseMissing('users', $data);
     }
@@ -326,7 +326,7 @@ class UserTest extends TestCase
         $user_id = User::max('id') + 1;
 
         $this->actingAs(User::inRandomOrder()->first())
-            ->json('delete', "users/$user_id")
+            ->json('delete', "/api/users/$user_id")
             ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJsonStructure([
                 'message',
@@ -352,7 +352,7 @@ class UserTest extends TestCase
         );
 
         $this->actingAs($random_user)
-            ->json('delete', "users/$user->id")
+            ->json('delete', "/api/users/$user->id")
             ->assertStatus(Response::HTTP_FORBIDDEN)
             ->assertJsonStructure([
                 'message',
