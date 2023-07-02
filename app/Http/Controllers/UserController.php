@@ -26,7 +26,7 @@ class UserController extends Controller
 
         $user->name     = $validated['name'];
         $user->email    = $validated['email'];
-        $user->password = Hash::make($validated['password']);
+        $user->password = $validated['password'];
 
         $user->save();
 
@@ -121,7 +121,7 @@ class UserController extends Controller
                 ? $user->email : $validated['email']
             ;
             $user->password  = is_null($validated['password'])
-                ? $user->password : Hash::make($validated['password'])
+                ? $user->password : $validated['password']
             ;
 
             $user->save();

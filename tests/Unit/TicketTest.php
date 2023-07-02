@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -51,7 +52,7 @@ class TicketTest extends TestCase
         $payload = [
             'title'        => Str::random(257),
             'description'  => Str::random(257),
-            'status'       => rand(3, 5),
+            'status'       => rand(),
             'priority'     => Ticket::max('priority'),
             'user_id'      => 'fail',
         ];
@@ -279,7 +280,7 @@ class TicketTest extends TestCase
         $payload = [
             'title'        => Str::random(257),
             'description'  => Str::random(257),
-            'status'       => rand(3, 5),
+            'status'       => rand(),
             'priority_new' => Ticket::inRandomOrder()->first()->priority,
             'priority_old' => $data['priority'],
             'user_id'      => 'fail',

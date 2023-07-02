@@ -123,7 +123,7 @@ class UserTest extends TestCase
             [
                 'name'     => $faker->name,
                 'email'    => $faker->unique()->email,
-                'password' => Hash::make($faker->password),
+                'password' => $faker->password,
             ]
         );
 
@@ -180,12 +180,12 @@ class UserTest extends TestCase
         $data = [
             'name'     => $faker->name,
             'email'    => $faker->unique()->email,
-            'password' => Hash::make($faker->password),
+            'password' => $faker->password,
         ];
         $payload = [
             'name'     => $faker->name,
             'email'    => $faker->unique()->email,
-            'password' => Hash::make($faker->password),
+            'password' => $faker->password,
         ];
         $user = User::create(
             $data
@@ -212,7 +212,7 @@ class UserTest extends TestCase
         $payload = [
             'name'     => $faker->name,
             'email'    => $faker->unique()->email,
-            'password' => Hash::make($faker->password),
+            'password' => $faker->password,
         ];
         $this->actingAs(User::inRandomOrder()->first())
             ->json('put', "users/$user_id", $payload)
@@ -233,7 +233,7 @@ class UserTest extends TestCase
         $data = [
             'name'     => $faker->name,
             'email'    => $faker->unique()->email,
-            'password' => Hash::make($faker->password),
+            'password' => $faker->password,
         ];
         $payload = [
             'name'     => Str::random(500),
@@ -274,7 +274,7 @@ class UserTest extends TestCase
         $data = [
             'name'     => $faker->name,
             'email'    => $faker->unique()->email,
-            'password' => Hash::make($faker->password),
+            'password' => $faker->password,
         ];
         $user = User::create(
             $data

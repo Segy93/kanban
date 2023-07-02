@@ -55,8 +55,6 @@ class User extends Authenticatable
 
 
 
-
-
     // Relations
 
     /**

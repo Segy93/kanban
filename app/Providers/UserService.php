@@ -20,7 +20,7 @@ class UserService {
     public static function validateDataCreate(Request $request): array {
         return $request->validate([
             'name'         => 'required|string|max:255',
-            'email'        => 'required|string|max:255|unique:users',
+            'email'        => 'required|string|max:255|email|unique:users',
             'password'     => 'required|string|max:255',
         ]);
     }
@@ -36,7 +36,7 @@ class UserService {
     public static function validateDataUpdate(Request $request, int $id): array {
         return $request->validate([
             'name'         => 'string|max:255|nullable',
-            'email'        => 'string|max:255|nullable|unique:users,email,' . $id,
+            'email'        => 'string|max:255|nullable|email|unique:users,email,' . $id,
             'password'     => 'string|max:255|nullable',
         ]);
     }
