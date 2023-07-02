@@ -20,10 +20,10 @@ class LoginTest extends TestCase
      * @return void
      */
     public function testLoginSuccessfull(): void {
-        $user = User::first();
+        $user = User::where('name', env('DB_USERNAME'))->first();
         $payload = [
             'email'     => $user->email,
-            'password'  => 'Test123*',
+            'password'  => env('DB_PASSWORD'),
         ];
         $this->json('post', '/login', $payload)
             ->assertStatus(Response::HTTP_OK)

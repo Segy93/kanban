@@ -12,12 +12,12 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name'      => 'test',
-            'email'     => 'test@test.com',
-            'password'  => 'Test123*',
-        ]);
         $faker = \Faker\Factory::create();
+        User::create([
+            'name'      => env('DB_USERNAME'),
+            'email'     => $faker->unique()->email,
+            'password'  => env('DB_PASSWORD'),
+        ]);
         for ($i = 0; $i < 50; $i++) {
             User::create([
                 'name'      => $faker->name,
