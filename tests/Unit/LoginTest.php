@@ -25,7 +25,7 @@ class LoginTest extends TestCase
             'email'     => $user->email,
             'password'  => env('DB_PASSWORD'),
         ];
-        $this->json('post', '/login', $payload)
+        $this->json('post', '/api/login', $payload)
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
                 'message',
@@ -44,7 +44,7 @@ class LoginTest extends TestCase
             'email'     => $user->email,
             'password'  => Str::random(),
         ];
-        $this->json('post', '/login', $payload)
+        $this->json('post', '/api/login', $payload)
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJsonStructure([
                 'message',

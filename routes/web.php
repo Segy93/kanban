@@ -22,7 +22,5 @@ Route::get('/login', function () {
     return view('welcome');
 })->name('login');
 
-Route::post('/login', [LoginController::class, 'authenticate']);
-
 
 
