@@ -191,7 +191,7 @@ class UserTest extends TestCase
             $data
         );
 
-        $this->actingAs(User::inRandomOrder()->first())
+        $this->actingAs($user)
             ->json('put', "users/$user->id", $payload)
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
@@ -244,12 +244,43 @@ class UserTest extends TestCase
             $data
         );
 
-        $this->actingAs(User::inRandomOrder()->first())
+        $this->actingAs($user)
             ->json('put', "users/$user->id", $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->assertJsonStructure([
                 'message',
                 'errors',
+            ])
+        ;
+    }
+
+    /**
+     * Tests if user update is forbidden
+     *
+     * @return void
+     */
+    public function testUserUpdateForbidden(): void {
+        $faker = \Faker\Factory::create();
+        $data = [
+            'name'     => $faker->name,
+            'email'    => $faker->unique()->email,
+            'password' => $faker->password,
+        ];
+        $payload = [
+            'name'     => $faker->name,
+            'email'    => $faker->unique()->email,
+            'password' => $faker->password,
+        ];
+        $random_user = User::inRandomOrder()->first();
+        $user = User::create(
+            $data
+        );
+
+        $this->actingAs($random_user)
+            ->json('put', "users/$user->id", $payload)
+            ->assertStatus(Response::HTTP_FORBIDDEN)
+            ->assertJsonStructure([
+                'message',
             ])
         ;
     }
@@ -280,7 +311,7 @@ class UserTest extends TestCase
             $data
         );
 
-        $this->actingAs(User::inRandomOrder()->first())
+        $this->actingAs($user)
             ->json('delete', "users/$user->id")
             ->assertStatus(Response::HTTP_NO_CONTENT);
         $this->assertDatabaseMissing('users', $data);
@@ -297,6 +328,32 @@ class UserTest extends TestCase
         $this->actingAs(User::inRandomOrder()->first())
             ->json('delete', "users/$user_id")
             ->assertStatus(Response::HTTP_NOT_FOUND)
+            ->assertJsonStructure([
+                'message',
+            ]
+        );
+    }
+
+    /**
+     * Tests user not found forbidden
+     *
+     * @return void
+     */
+    public function testUserDeleteForbidden(): void {
+        $faker = \Faker\Factory::create();
+        $data = [
+            'name'     => $faker->name,
+            'email'    => $faker->unique()->email,
+            'password' => $faker->password,
+        ];
+        $random_user = User::inRandomOrder()->first();
+        $user = User::create(
+            $data
+        );
+
+        $this->actingAs($random_user)
+            ->json('delete', "users/$user->id")
+            ->assertStatus(Response::HTTP_FORBIDDEN)
             ->assertJsonStructure([
                 'message',
             ]

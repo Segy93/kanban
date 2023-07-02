@@ -7,8 +7,9 @@ use App\Providers\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
+/** CRUD methods for managing users */
 class UserController extends Controller
 {
     // CREATE
@@ -114,6 +115,11 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!empty($user)) {
+            if (Auth::id() !== $id) {
+                return response()->json([
+                    'message' => 'Forbidden update of user.'
+                ], Response::HTTP_FORBIDDEN);
+            }
             $user->name      = is_null($validated['name'])
                 ? $user->name : $validated['name']
             ;
@@ -157,6 +163,11 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!empty($user)) {
+            if (Auth::id() !== $id) {
+                return response()->json([
+                    'message' => 'Forbidden delete of user.'
+                ], Response::HTTP_FORBIDDEN);
+            }
             $user->delete();
 
             return response()->json([

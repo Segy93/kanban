@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+/** CRUD methods for managing tickets */
 class TicketController extends Controller
 {
     // CREATE
