@@ -60,6 +60,27 @@ class TicketController extends Controller
     }
 
     /**
+     * Fetches tickets by status
+     *
+     * @param int $id    status
+     *
+     * @return JsonResponse
+     */
+    public function lane(int $id): JsonResponse {
+        if (!TicketService::validateStatus($id)) {
+            return response()->json([
+                'message' => 'Status not valid'
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        $tickets = Ticket::where('status', $id)
+            ->orderBy('priority')
+            ->get()
+        ;
+
+        return response()->json($tickets);
+    }
+
+    /**
      * Fetch ticket by id
      *
      * @param int $id    id of ticket

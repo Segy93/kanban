@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
 
     // READ
     Route::get('/tickets', [TicketController::class, 'index']);
+    Route::get('/tickets/status/{id}', [TicketController::class, 'lane']);
     Route::get('/tickets/{id}', [TicketController::class, 'show']);
     Route::get('/tickets/search/{search}', [TicketController::class, 'search']);
 

@@ -152,4 +152,18 @@ class TicketService {
             'user_id'      => 'integer|nullable',
         ]);
     }
+
+    /**
+     * Validating status
+     *
+     * @param int $status
+     *
+     * @return bool
+     */
+    public static function validateStatus(int $status): bool {
+        if (array_key_exists($status, Ticket::getStatuses())) {
+            return true;
+        }
+        return false;
+    }
 }

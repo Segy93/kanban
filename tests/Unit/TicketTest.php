@@ -100,6 +100,48 @@ class TicketTest extends TestCase
     }
 
     /**
+     * Test of fetching tickets by status
+     *
+     * @return void
+     */
+    public function testLaneReturnsDataInValidFormat(): void {
+        $status = array_rand(Ticket::getStatuses());
+        $this->actingAs(User::inRandomOrder()->first())
+            ->json('get', "/tickets/status/$status")
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure([
+                '*' => [
+                    'id',
+                    'title',
+                    'description',
+                    'status',
+                    'priority',
+                    'created_at',
+                    'updated_at',
+                    'user_id',
+                ]
+            ]
+        );
+    }
+
+    /**
+     * Test of fetching tickets by status
+     *
+     * @return void
+     */
+    public function testLaneStatusNotValid(): void {
+        $max_allowed = max(array_keys(Ticket::getStatuses()));
+        $status = rand($max_allowed + 1, $max_allowed + 10);
+        $this->actingAs(User::inRandomOrder()->first())
+        ->json('get', "/tickets/status/$status")
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonStructure([
+                'message',
+            ])
+        ;
+    }
+
+    /**
      * Test searching of tickets
      *
      * @return void
