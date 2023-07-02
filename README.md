@@ -7,9 +7,12 @@
 7. go to the path of Vagrantfile that was previously extracted
 8. vagrant up
 9. after installation finishes vagrant ssh
-10. sudo -i
-11. cd /tmp/install
-12. ./install.sh
+10.
+```
+sudo -i
+cd /tmp/install
+./install.sh
+```
 
 
 PS. Shell script is for installing lamp stack and cloning github project
