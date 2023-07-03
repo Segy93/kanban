@@ -408,7 +408,9 @@ class TicketTest extends TestCase
 
         $this->actingAs(User::inRandomOrder()->first())
             ->json('delete', "api/tickets/$ticket->id")
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_NO_CONTENT)
+            ->assertNoContent()
+        ;
         $this->assertDatabaseMissing('tickets', $data);
     }
 

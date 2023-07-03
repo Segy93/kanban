@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Providers\JsonService;
 use App\Providers\PermissionService;
 use App\Providers\UserService;
 use Illuminate\Http\JsonResponse;
@@ -31,9 +32,8 @@ class UserController extends Controller
 
         $user->save();
 
-        return response()->json([
-            'message' => 'User created',
-        ], Response::HTTP_CREATED);
+        $data = ['message' => 'User created'];
+        return JsonService::sendJsonResponse($data, Response::HTTP_CREATED);
     }
 
 
@@ -54,7 +54,7 @@ class UserController extends Controller
     public function index(): JsonResponse {
         $users = User::all();
 
-        return response()->json($users);
+        return JsonService::sendJsonResponse($users, Response::HTTP_OK);
     }
 
     /**
@@ -68,13 +68,10 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (!empty($user)) {
-            return response()->json([
-                $user
-            ]);
+            return JsonService::sendJsonResponse([$user], Response::HTTP_OK);
         } else {
-            return response()->json([
-                'message' => 'User not found'
-            ], Response::HTTP_NOT_FOUND);
+            $data = ['message' => 'User not found'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -86,10 +83,12 @@ class UserController extends Controller
      * @return JsonResponse
      */
     public function search(string $search): JsonResponse {
-        $users = User::where('name', 'like', '%' . $search . '%');
-        $users->orWhere('email', 'like', '%' . $search . '%');
+        $users = User::where('name', 'like', '%' . $search . '%')
+            ->orWhere('email', 'like', '%' . $search . '%')
+            ->get()
+        ;
 
-        return response()->json($users);
+        return JsonService::sendJsonResponse($users, Response::HTTP_OK);
     }
 
 
@@ -116,9 +115,8 @@ class UserController extends Controller
 
         if (!empty($user)) {
             if (!PermissionService::checkIfUserIsAllowed($id)) {
-                return response()->json([
-                    'message' => 'Forbidden update of user.'
-                ], Response::HTTP_FORBIDDEN);
+                $data = ['message' => 'Forbidden update of user.'];
+                return JsonService::sendJsonResponse($data, Response::HTTP_FORBIDDEN);
             }
             if ($validated['name'] !== null) {
                 $user->name = $validated['name'];
@@ -132,13 +130,11 @@ class UserController extends Controller
 
             $user->save();
 
-            return response()->json([
-                'message' => 'User updated'
-            ], Response::HTTP_OK);
+            $data = ['message' => 'User updated.'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_OK);
         } else {
-            return response()->json([
-                'message' => 'User not found'
-            ], Response::HTTP_NOT_FOUND);
+            $data = ['message' => 'User not found.'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -164,19 +160,16 @@ class UserController extends Controller
 
         if (!empty($user)) {
             if (!PermissionService::checkIfUserIsAllowed($id)) {
-                return response()->json([
-                    'message' => 'Forbidden delete of user.'
-                ], Response::HTTP_FORBIDDEN);
+                $data = ['message' => 'Forbidden delete of user.'];
+                return JsonService::sendJsonResponse($data, Response::HTTP_FORBIDDEN);
             }
             $user->delete();
 
-            return response()->json([
-                'message' => 'User deleted'
-            ], Response::HTTP_NO_CONTENT);
+            $data = ['message' => 'User deleted'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_NO_CONTENT);
         } else {
-            return response()->json([
-                'message' => 'User not found'
-            ], Response::HTTP_NOT_FOUND);
+            $data = ['message' => 'User not found'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_NOT_FOUND);
         }
     }
 }

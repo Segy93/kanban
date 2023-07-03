@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Providers\JsonService;
 use App\Providers\TicketService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,9 +34,8 @@ class TicketController extends Controller
 
         $ticket->save();
 
-        return response()->json([
-            'message' => 'Ticket created'
-        ], Response::HTTP_CREATED);
+        $data = ['message' => 'Ticket created'];
+        return JsonService::sendJsonResponse($data, Response::HTTP_CREATED);
     }
 
 
@@ -56,7 +56,7 @@ class TicketController extends Controller
     public function index(): JsonResponse {
         $tickets = Ticket::orderBy('priority')->get();
 
-        return response()->json($tickets);
+        return JsonService::sendJsonResponse($tickets, Response::HTTP_OK);
     }
 
     /**
@@ -68,16 +68,15 @@ class TicketController extends Controller
      */
     public function lane(int $id): JsonResponse {
         if (!TicketService::validateStatus($id)) {
-            return response()->json([
-                'message' => 'Status not valid'
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            $data = ['message' => 'Status not valid'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         $tickets = Ticket::where('status', $id)
             ->orderBy('priority')
             ->get()
         ;
 
-        return response()->json($tickets);
+        return JsonService::sendJsonResponse($tickets, Response::HTTP_OK);
     }
 
     /**
@@ -91,11 +90,10 @@ class TicketController extends Controller
         $ticket = Ticket::where('id', $id)->with('user')->first();
 
         if (!empty($ticket)) {
-            return response()->json([$ticket]);
+            return JsonService::sendJsonResponse([$ticket], Response::HTTP_OK);
         } else {
-            return response()->json([
-                'message' => 'Ticket not found'
-            ], Response::HTTP_NOT_FOUND);
+            $data = ['message' => 'Ticket not found'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -107,9 +105,9 @@ class TicketController extends Controller
      * @return JsonResponse
      */
     public function search(string $search): JsonResponse {
-        $tickets = Ticket::where('title', 'like', '%' . $search . '%');
+        $tickets = Ticket::where('title', 'like', '%' . $search . '%')->get();
 
-        return response()->json($tickets);
+        return JsonService::sendJsonResponse($tickets, Response::HTTP_OK);
     }
 
 
@@ -156,18 +154,15 @@ class TicketController extends Controller
             $ticket->save();
 
             if ($reorder === false) {
-                return response()->json([
-                    'message' => 'Ticket by priority not found'
-                ], Response::HTTP_NOT_FOUND);
+                $data = ['message' => 'Ticket by priority not found'];
+                return JsonService::sendJsonResponse($data, Response::HTTP_NOT_FOUND);
             }
 
-            return response()->json([
-                'message' => 'Ticket updated'
-            ], Response::HTTP_OK);
+            $data = ['message' => 'Ticket updated'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_OK);
         } else {
-            return response()->json([
-                'message' => 'Ticket not found'
-            ], Response::HTTP_NOT_FOUND);
+            $data = ['message' => 'Ticket not found'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -194,13 +189,11 @@ class TicketController extends Controller
         if (!empty($ticket)) {
             $ticket->delete();
 
-            return response()->json([
-                'message' => 'Ticket deleted'
-            ], Response::HTTP_NO_CONTENT);
+            $data = ['message' => 'Ticket deleted'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_NO_CONTENT);
         } else {
-            return response()->json([
-                'message' => 'Ticket not found'
-            ], Response::HTTP_NOT_FOUND);
+            $data = ['message' => 'Ticket not found'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_NOT_FOUND);
         }
     }
 }

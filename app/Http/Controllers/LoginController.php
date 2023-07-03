@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Providers\JsonService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -29,13 +30,11 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             Auth::user();
 
-            return response()->json([
-                'message' => 'Successful'
-            ], Response::HTTP_OK);
+            $data = ['message' => 'Successful'];
+            return JsonService::sendJsonResponse($data, Response::HTTP_OK);
         }
 
-        return response()->json([
-            'message' => 'Unauthorized'
-        ], Response::HTTP_UNAUTHORIZED);
+        $data = ['message' => 'Unauthorized'];
+        return JsonService::sendJsonResponse($data, Response::HTTP_UNAUTHORIZED);
     }
 }

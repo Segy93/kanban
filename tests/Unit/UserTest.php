@@ -313,7 +313,9 @@ class UserTest extends TestCase
 
         $this->actingAs($user)
             ->json('delete', "/api/users/$user->id")
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_NO_CONTENT)
+            ->assertNoContent()
+        ;
         $this->assertDatabaseMissing('users', $data);
     }
 
