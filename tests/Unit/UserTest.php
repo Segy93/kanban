@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\Models\User;
+use App\Providers\SeedService;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -21,11 +21,10 @@ class UserTest extends TestCase
      * @return void
      */
     public function testUserIsCreatedSuccessfully(): void {
-        $faker = \Faker\Factory::create();
         $payload = [
-            'name'     => $faker->name,
-            'email'    => $faker->unique()->email,
-            'password' => $faker->password
+            'name'     => fake()->name(),
+            'email'    => fake()->unique()->safeEmail(),
+            'password' => fake()->password()
         ];
         $this->actingAs(User::inRandomOrder()->first())
             ->json('post', '/api/users', $payload)
@@ -96,7 +95,7 @@ class UserTest extends TestCase
      */
     public function testSearchUserReturnsDataInValidFormat(): void {
         $user = User::inRandomOrder()->first();
-        $this->actingAs(User::inRandomOrder()->first())
+        $this->actingAs($user)
             ->json('get', "/api/users/search/$user->name")
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure([
@@ -118,17 +117,16 @@ class UserTest extends TestCase
      * @return void
      */
     public function testUserIsShownCorrectly(): void {
-        $faker = \Faker\Factory::create();
         $user = User::create(
             [
-                'name'     => $faker->name,
-                'email'    => $faker->unique()->email,
-                'password' => $faker->password,
+                'name'     => fake()->name(),
+                'email'    => fake()->unique()->safeEmail(),
+                'password' => fake()->password(),
             ]
         );
 
-        $this->actingAs(User::inRandomOrder()->first())
-            ->json('get', "api/users/$user->id")
+        $this->actingAs($user)
+            ->json('get', "/api/users/$user->id")
             ->assertStatus(Response::HTTP_OK)
             ->assertExactJson([
                 [
@@ -176,20 +174,12 @@ class UserTest extends TestCase
      * @return void
      */
     public function testUpdateUserReturnsCorrectData() {
-        $faker = \Faker\Factory::create();
-        $data = [
-            'name'     => $faker->name,
-            'email'    => $faker->unique()->email,
-            'password' => $faker->password,
-        ];
         $payload = [
-            'name'     => $faker->name,
-            'email'    => $faker->unique()->email,
-            'password' => $faker->password,
+            'name'     => fake()->name(),
+            'email'    => fake()->unique()->safeEmail(),
+            'password' => fake()->password(),
         ];
-        $user = User::create(
-            $data
-        );
+        $user = SeedService::createUser();
 
         $this->actingAs($user)
             ->json('put', "/api/users/$user->id", $payload)
@@ -208,11 +198,10 @@ class UserTest extends TestCase
     public function testUserUpdate404(): void {
         $user_id = User::max('id') + 1;
 
-        $faker = \Faker\Factory::create();
         $payload = [
-            'name'     => $faker->name,
-            'email'    => $faker->unique()->email,
-            'password' => $faker->password,
+            'name'     => fake()->name(),
+            'email'    => fake()->unique()->safeEmail(),
+            'password' => fake()->password(),
         ];
         $this->actingAs(User::inRandomOrder()->first())
             ->json('put', "/api/users/$user_id", $payload)
@@ -229,20 +218,12 @@ class UserTest extends TestCase
      * @return void
      */
     public function testUserUpdateValidationFailed(): void {
-        $faker = \Faker\Factory::create();
-        $data = [
-            'name'     => $faker->name,
-            'email'    => $faker->unique()->email,
-            'password' => $faker->password,
-        ];
         $payload = [
             'name'     => Str::random(500),
             'email'    => Str::random(300),
             'password' => Str::random(200)
         ];
-        $user = User::create(
-            $data
-        );
+        $user = SeedService::createUser();
 
         $this->actingAs($user)
             ->json('put', "/api/users/$user->id", $payload)
@@ -260,21 +241,13 @@ class UserTest extends TestCase
      * @return void
      */
     public function testUserUpdateForbidden(): void {
-        $faker = \Faker\Factory::create();
-        $data = [
-            'name'     => $faker->name,
-            'email'    => $faker->unique()->email,
-            'password' => $faker->password,
-        ];
         $payload = [
-            'name'     => $faker->name,
-            'email'    => $faker->unique()->email,
-            'password' => $faker->password,
+            'name'     => fake()->name(),
+            'email'    => fake()->unique()->safeEmail(),
+            'password' => fake()->password(),
         ];
         $random_user = User::inRandomOrder()->first();
-        $user = User::create(
-            $data
-        );
+        $user = SeedService::createUser();
 
         $this->actingAs($random_user)
             ->json('put', "/api/users/$user->id", $payload)
@@ -301,22 +274,14 @@ class UserTest extends TestCase
      * @return void
      */
     public function testUserIsDeleted() {
-        $faker = \Faker\Factory::create();
-        $data = [
-            'name'     => $faker->name,
-            'email'    => $faker->unique()->email,
-            'password' => $faker->password,
-        ];
-        $user = User::create(
-            $data
-        );
+        $user = SeedService::createUser();
 
         $this->actingAs($user)
             ->json('delete', "/api/users/$user->id")
             ->assertStatus(Response::HTTP_NO_CONTENT)
             ->assertNoContent()
         ;
-        $this->assertDatabaseMissing('users', $data);
+        $this->assertDatabaseMissing('users', $user->toArray());
     }
 
     /**
@@ -342,16 +307,8 @@ class UserTest extends TestCase
      * @return void
      */
     public function testUserDeleteForbidden(): void {
-        $faker = \Faker\Factory::create();
-        $data = [
-            'name'     => $faker->name,
-            'email'    => $faker->unique()->email,
-            'password' => $faker->password,
-        ];
         $random_user = User::inRandomOrder()->first();
-        $user = User::create(
-            $data
-        );
+        $user = SeedService::createUser();
 
         $this->actingAs($random_user)
             ->json('delete', "/api/users/$user->id")

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Ticket;
+use App\Providers\SeedService;
 use Illuminate\Database\Seeder;
 
 class TicketSeeder extends Seeder
@@ -12,14 +13,9 @@ class TicketSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = \Faker\Factory::create();
-        for ($i = 0; $i < 50; $i++) {
-            Ticket::create([
-                'title'       => $faker->text,
-                'description' => $faker->text,
-                'status'      => array_rand(Ticket::getStatuses()),
-                'priority'    => $i,
-            ]);
-        }
+        Ticket::factory()
+            ->count(SeedService::$count)
+            ->create()
+        ;
     }
 }
