@@ -58,7 +58,8 @@ class SeedService
      *
      * @return Ticket
      */
-    public static function createTicket(): Ticket {
+    public static function createTicket(): Ticket
+    {
         $user = User::inRandomOrder()->first();
         return Ticket::create(
             [

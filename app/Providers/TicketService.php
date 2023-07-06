@@ -103,7 +103,10 @@ class TicketService
         if ($ticket->priority !== $priority) {
             $increment  = $ticket->priority > $priority ? 1 : -1;
             $dir        = $ticket->priority > $priority ? 'desc' : 'asc';
-            $range      = $ticket->priority > $priority ? [$priority, $ticket->priority] : [$ticket->priority + 1, $priority];
+            $range      = $ticket->priority > $priority
+                ? [$priority, $ticket->priority]
+                : [$ticket->priority + 1, $priority]
+            ;
 
             $ticket->priority = 0;
             $ticket->save();

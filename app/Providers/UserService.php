@@ -47,8 +47,8 @@ class UserService
     /**
      * Data validation for users updating
      *
-     * @param Request $request  Http request
-     * @param int     $id       User id
+     * @param Request $request Http request
+     * @param int     $id      User id
      *
      * @return array
      */

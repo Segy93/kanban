@@ -43,7 +43,6 @@ class TicketController extends Controller
         $ticket = new Ticket();
 
         $validated = TicketService::validateDataCreate($request);
-
         $ticket->title       = $validated['title'];
         $ticket->description = $validated['description'];
         $ticket->priority    = $validated['priority'];
@@ -155,7 +154,6 @@ class TicketController extends Controller
         $ticket = Ticket::find($id);
 
         $validated = TicketService::validateDataUpdate($request, $id);
-
         if (!empty($ticket)) {
             TicketService::createHistory($ticket);
 
@@ -169,10 +167,12 @@ class TicketController extends Controller
                 $ticket->status = $validated['status'];
             }
             if (!is_null($validated['priority_new'])) {
-                $reorder = TicketService::reorder($validated['priority_old'], $validated['priority_new']);
+                $old = $validated['priority_old'];
+                $new = $validated['priority_new'];
+                $reorder = TicketService::reorder($old, $new);
             }
 
-            // user_id mandatory parameter since user can be unassigned, then the value is null
+            // user_id mandatory parameter since user can be unassigned
             $ticket->user_id = $validated['user_id'];
 
             $ticket->save();
