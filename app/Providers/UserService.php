@@ -27,38 +27,22 @@ class UserService
 {
 
     /**
-     * Data validation for users creating
-     *
-     * @param Request $request Http request
-     *
-     * @return array
-     */
-    public static function validateDataCreate(Request $request): array
-    {
-        return $request->validate(
-            [
-                'name'         => 'required|string|max:255',
-                'email'        => 'required|string|max:255|email|unique:users',
-                'password'     => 'required|string|max:255',
-            ]
-        );
-    }
-
-    /**
-     * Data validation for users updating
+     * Data validation for users
      *
      * @param Request $request Http request
      * @param int     $id      User id
      *
      * @return array
      */
-    public static function validateDataUpdate(Request $request, int $id): array
+    public static function validateData(Request $request, ?int $id = null): array
     {
+        $mandatory = $id === null ? 'required' : 'nullable';
         return $request->validate(
             [
-                'name' => 'string|max:255|nullable',
-                'email' => 'string|max:255|nullable|email|unique:users,email,' . $id,
-                'password' => 'string|max:255|nullable',
+                'name' => $mandatory . '|string|max:255',
+                'email' => $mandatory . '|string|max:255|email|unique:users,email,'
+                    . $id,
+                'password' => $mandatory . '|string|max:255',
             ]
         );
     }

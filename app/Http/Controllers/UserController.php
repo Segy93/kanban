@@ -41,7 +41,7 @@ class UserController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validated = UserService::validateDataCreate($request);
+        $validated = UserService::validateData($request);
         $user = new User();
 
         $user->name     = $validated['name'];
@@ -131,7 +131,7 @@ class UserController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $validated = UserService::validateDataUpdate($request, $id);
+        $validated = UserService::validateData($request, $id);
         $user = User::find($id);
 
         if (!empty($user)) {
