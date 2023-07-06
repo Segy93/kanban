@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * UserTest.php
+ * php version 8.1.2
+ *
+ * @category Test
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
+ */
 namespace Tests\Unit;
 
 use App\Models\User;
@@ -8,8 +18,15 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
+
 /**
  * Tests for UserController methods
+ *
+ * @category Test
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
  */
 class UserTest extends TestCase
 {
@@ -20,7 +37,8 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testUserIsCreatedSuccessfully(): void {
+    public function testUserIsCreatedSuccessfully(): void
+    {
         $payload = [
             'name'     => fake()->name(),
             'email'    => fake()->unique()->safeEmail(),
@@ -29,10 +47,8 @@ class UserTest extends TestCase
         $this->actingAs(User::inRandomOrder()->first())
             ->json('post', '/api/users', $payload)
             ->assertStatus(Response::HTTP_CREATED)
-            ->assertJsonStructure([
-                'message',
-            ])
-        ;
+            ->assertJsonStructure(['message',]);
+
         unset($payload['password']);
         $this->assertDatabaseHas('users', $payload);
     }
@@ -42,7 +58,8 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testUserCreateValidationFailed(): void {
+    public function testUserCreateValidationFailed(): void
+    {
         $payload = [
             'name'     => Str::random(500),
             'email'    => Str::random(300),
@@ -51,11 +68,7 @@ class UserTest extends TestCase
         $this->actingAs(User::inRandomOrder()->first())
             ->json('post', '/api/users', $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'message',
-                'errors',
-            ])
-        ;
+            ->assertJsonStructure(['message','errors',]);
     }
 
 
@@ -71,21 +84,23 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testIndexReturnsDataInValidFormat(): void {
+    public function testIndexReturnsDataInValidFormat(): void
+    {
         $this->actingAs(User::inRandomOrder()->first())
             ->json('get', '/api/users')
             ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'name',
-                    'email',
-                    'email_verified_at',
-                    'created_at',
-                    'updated_at',
+            ->assertJsonStructure(
+                [
+                    '*' => [
+                        'id',
+                        'name',
+                        'email',
+                        'email_verified_at',
+                        'created_at',
+                        'updated_at',
+                    ]
                 ]
-            ]
-        );
+            );
     }
 
     /**
@@ -93,22 +108,24 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testSearchUserReturnsDataInValidFormat(): void {
+    public function testSearchUserReturnsDataInValidFormat(): void
+    {
         $user = User::inRandomOrder()->first();
         $this->actingAs($user)
             ->json('get', "/api/users/search/$user->name")
             ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'name',
-                    'email',
-                    'email_verified_at',
-                    'created_at',
-                    'updated_at',
+            ->assertJsonStructure(
+                [
+                    '*' => [
+                        'id',
+                        'name',
+                        'email',
+                        'email_verified_at',
+                        'created_at',
+                        'updated_at',
+                    ]
                 ]
-            ]
-        );
+            );
     }
 
     /**
@@ -116,7 +133,8 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testUserIsShownCorrectly(): void {
+    public function testUserIsShownCorrectly(): void
+    {
         $user = User::create(
             [
                 'name'     => fake()->name(),
@@ -128,17 +146,18 @@ class UserTest extends TestCase
         $this->actingAs($user)
             ->json('get', "/api/users/$user->id")
             ->assertStatus(Response::HTTP_OK)
-            ->assertExactJson([
+            ->assertExactJson(
                 [
-                    'id'                => $user->id,
-                    'name'              => $user->name,
-                    'email'             => $user->email,
-                    'email_verified_at' => $user->email_verified_at,
-                    'created_at'        => $user->created_at,
-                    'updated_at'        => $user->updated_at,
+                    [
+                        'id'                => $user->id,
+                        'name'              => $user->name,
+                        'email'             => $user->email,
+                        'email_verified_at' => $user->email_verified_at,
+                        'created_at'        => $user->created_at,
+                        'updated_at'        => $user->updated_at,
+                    ]
                 ]
-            ]
-        );
+            );
     }
 
     /**
@@ -146,16 +165,14 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testUserIsShown404(): void {
+    public function testUserIsShown404(): void
+    {
         $user_id = User::max('id') + 1;
 
         $this->actingAs(User::inRandomOrder()->first())
             ->json('get', "/api/users/$user_id")
             ->assertStatus(Response::HTTP_NOT_FOUND)
-            ->assertJsonStructure([
-                'message',
-            ]
-        );
+            ->assertJsonStructure(['message',]);
     }
 
 
@@ -173,7 +190,8 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testUpdateUserReturnsCorrectData() {
+    public function testUpdateUserReturnsCorrectData(): void
+    {
         $payload = [
             'name'     => fake()->name(),
             'email'    => fake()->unique()->safeEmail(),
@@ -184,10 +202,7 @@ class UserTest extends TestCase
         $this->actingAs($user)
             ->json('put', "/api/users/$user->id", $payload)
             ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                'message',
-            ])
-        ;
+            ->assertJsonStructure(['message',]);
     }
 
     /**
@@ -195,7 +210,8 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testUserUpdate404(): void {
+    public function testUserUpdate404(): void
+    {
         $user_id = User::max('id') + 1;
 
         $payload = [
@@ -206,10 +222,7 @@ class UserTest extends TestCase
         $this->actingAs(User::inRandomOrder()->first())
             ->json('put', "/api/users/$user_id", $payload)
             ->assertStatus(Response::HTTP_NOT_FOUND)
-            ->assertJsonStructure([
-                'message',
-            ]
-        );
+            ->assertJsonStructure(['message',]);
     }
 
     /**
@@ -217,7 +230,8 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testUserUpdateValidationFailed(): void {
+    public function testUserUpdateValidationFailed(): void
+    {
         $payload = [
             'name'     => Str::random(500),
             'email'    => Str::random(300),
@@ -228,11 +242,7 @@ class UserTest extends TestCase
         $this->actingAs($user)
             ->json('put', "/api/users/$user->id", $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'message',
-                'errors',
-            ])
-        ;
+            ->assertJsonStructure(['message','errors',]);
     }
 
     /**
@@ -240,7 +250,8 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testUserUpdateForbidden(): void {
+    public function testUserUpdateForbidden(): void
+    {
         $payload = [
             'name'     => fake()->name(),
             'email'    => fake()->unique()->safeEmail(),
@@ -252,10 +263,7 @@ class UserTest extends TestCase
         $this->actingAs($random_user)
             ->json('put', "/api/users/$user->id", $payload)
             ->assertStatus(Response::HTTP_FORBIDDEN)
-            ->assertJsonStructure([
-                'message',
-            ])
-        ;
+            ->assertJsonStructure(['message',]);
     }
 
 
@@ -273,14 +281,14 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testUserIsDeleted() {
+    public function testUserIsDeleted(): void
+    {
         $user = SeedService::createUser();
 
         $this->actingAs($user)
             ->json('delete', "/api/users/$user->id")
             ->assertStatus(Response::HTTP_NO_CONTENT)
-            ->assertNoContent()
-        ;
+            ->assertNoContent();
         $this->assertDatabaseMissing('users', $user->toArray());
     }
 
@@ -289,16 +297,14 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testUserDelete404(): void {
+    public function testUserDelete404(): void
+    {
         $user_id = User::max('id') + 1;
 
         $this->actingAs(User::inRandomOrder()->first())
             ->json('delete', "/api/users/$user_id")
             ->assertStatus(Response::HTTP_NOT_FOUND)
-            ->assertJsonStructure([
-                'message',
-            ]
-        );
+            ->assertJsonStructure(['message',]);
     }
 
     /**
@@ -306,16 +312,14 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function testUserDeleteForbidden(): void {
+    public function testUserDeleteForbidden(): void
+    {
         $random_user = User::inRandomOrder()->first();
         $user = SeedService::createUser();
 
         $this->actingAs($random_user)
             ->json('delete', "/api/users/$user->id")
             ->assertStatus(Response::HTTP_FORBIDDEN)
-            ->assertJsonStructure([
-                'message',
-            ]
-        );
+            ->assertJsonStructure(['message',]);
     }
 }

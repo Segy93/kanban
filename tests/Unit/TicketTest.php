@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * TicketTest.php
+ * php version 8.1.2
+ *
+ * @category Test
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
+ */
 namespace Tests\Unit;
 
 use App\Models\Ticket;
@@ -11,6 +20,12 @@ use Tests\TestCase;
 
 /**
  * Tests for TicketController methods
+ *
+ * @category Test
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
  */
 class TicketTest extends TestCase
 {
@@ -21,7 +36,8 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testTicketIsCreatedSuccessfully(): void {
+    public function testTicketIsCreatedSuccessfully(): void
+    {
         $user = User::inRandomOrder()->first();
         $payload = [
             'title'        => fake()->realText(),
@@ -33,10 +49,7 @@ class TicketTest extends TestCase
         $this->actingAs($user)
             ->json('post', '/api/tickets', $payload)
             ->assertStatus(Response::HTTP_CREATED)
-            ->assertJsonStructure([
-                'message',
-            ])
-        ;
+            ->assertJsonStructure(['message',]);
         unset($payload['password']);
         $this->assertDatabaseHas('tickets', $payload);
     }
@@ -46,7 +59,8 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testTicketCreateValidationFailed(): void {
+    public function testTicketCreateValidationFailed(): void
+    {
         $payload = [
             'title'        => Str::random(257),
             'description'  => Str::random(257),
@@ -57,11 +71,7 @@ class TicketTest extends TestCase
         $this->actingAs(User::inRandomOrder()->first())
             ->json('post', '/api/tickets', $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'message',
-                'errors',
-            ])
-        ;
+            ->assertJsonStructure(['message', 'errors']);
     }
 
 
@@ -78,23 +88,25 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testIndexReturnsDataInValidFormat(): void {
+    public function testIndexReturnsDataInValidFormat(): void
+    {
         $this->actingAs(User::inRandomOrder()->first())
             ->json('get', '/api/tickets')
             ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'title',
-                    'description',
-                    'status',
-                    'priority',
-                    'created_at',
-                    'updated_at',
-                    'user_id',
+            ->assertJsonStructure(
+                [
+                    '*' => [
+                        'id',
+                        'title',
+                        'description',
+                        'status',
+                        'priority',
+                        'created_at',
+                        'updated_at',
+                        'user_id',
+                    ]
                 ]
-            ]
-        );
+            );
     }
 
     /**
@@ -102,24 +114,26 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testLaneReturnsDataInValidFormat(): void {
+    public function testLaneReturnsDataInValidFormat(): void
+    {
         $status = array_rand(Ticket::getStatuses());
         $this->actingAs(User::inRandomOrder()->first())
             ->json('get', "/api/tickets/status/$status")
             ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'title',
-                    'description',
-                    'status',
-                    'priority',
-                    'created_at',
-                    'updated_at',
-                    'user_id',
+            ->assertJsonStructure(
+                [
+                    '*' => [
+                        'id',
+                        'title',
+                        'description',
+                        'status',
+                        'priority',
+                        'created_at',
+                        'updated_at',
+                        'user_id',
+                    ]
                 ]
-            ]
-        );
+            );
     }
 
     /**
@@ -127,16 +141,14 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testLaneStatusNotValid(): void {
+    public function testLaneStatusNotValid(): void
+    {
         $max_allowed = max(array_keys(Ticket::getStatuses()));
         $status = rand($max_allowed + 1, $max_allowed + 10);
         $this->actingAs(User::inRandomOrder()->first())
             ->json('get', "/api/tickets/status/$status")
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'message',
-            ])
-        ;
+            ->assertJsonStructure(['message',]);
     }
 
     /**
@@ -144,24 +156,26 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testSearchTicketReturnsDataInValidFormat(): void {
+    public function testSearchTicketReturnsDataInValidFormat(): void
+    {
         $ticket = Ticket::inRandomOrder()->first();
         $this->actingAs(User::inRandomOrder()->first())
             ->json('get', "/api/tickets/search/$ticket->title")
             ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                '*' => [
-                    'id',
-                    'title',
-                    'description',
-                    'status',
-                    'priority',
-                    'created_at',
-                    'updated_at',
-                    'user_id',
+            ->assertJsonStructure(
+                [
+                    '*' => [
+                        'id',
+                        'title',
+                        'description',
+                        'status',
+                        'priority',
+                        'created_at',
+                        'updated_at',
+                        'user_id',
+                    ]
                 ]
-            ]
-        );
+            );
     }
 
     /**
@@ -169,7 +183,8 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testTicketIsShownCorrectly(): void {
+    public function testTicketIsShownCorrectly(): void
+    {
         $ticket = SeedService::createTicket();
 
         $user = $ticket->user;
@@ -177,28 +192,29 @@ class TicketTest extends TestCase
         $this->actingAs($user)
             ->json('get', "/api/tickets/$ticket->id")
             ->assertStatus(Response::HTTP_OK)
-            ->assertExactJson([
+            ->assertExactJson(
                 [
-                    'id'                => $ticket->id,
-                    'title'             => $ticket->title,
-                    'description'       => $ticket->description,
-                    'status'            => $ticket->status,
-                    'status_name'       => $ticket->status_name,
-                    'priority'          => $ticket->priority,
-                    'created_at'        => $ticket->created_at,
-                    'updated_at'        => $ticket->updated_at,
-                    'user_id'           => $ticket->user_id,
-                    'user'              => [
-                        'id'                => $user->id,
-                        'name'              => $user->name,
-                        'email'             => $user->email,
-                        'email_verified_at' => $user->email_verified_at,
-                        'created_at'        => $user->created_at,
-                        'updated_at'        => $user->updated_at,
-                    ],
+                    [
+                        'id'                => $ticket->id,
+                        'title'             => $ticket->title,
+                        'description'       => $ticket->description,
+                        'status'            => $ticket->status,
+                        'status_name'       => $ticket->status_name,
+                        'priority'          => $ticket->priority,
+                        'created_at'        => $ticket->created_at,
+                        'updated_at'        => $ticket->updated_at,
+                        'user_id'           => $ticket->user_id,
+                        'user'              => [
+                            'id'                => $user->id,
+                            'name'              => $user->name,
+                            'email'             => $user->email,
+                            'email_verified_at' => $user->email_verified_at,
+                            'created_at'        => $user->created_at,
+                            'updated_at'        => $user->updated_at,
+                        ],
+                    ]
                 ]
-            ]
-        );
+            );
     }
 
     /**
@@ -206,16 +222,14 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testTicketIsShown404(): void {
+    public function testTicketIsShown404(): void
+    {
         $ticket_id = Ticket::max('id') + 1;
 
         $this->actingAs(User::inRandomOrder()->first())
             ->json('get', "/api/tickets/$ticket_id")
             ->assertStatus(Response::HTTP_NOT_FOUND)
-            ->assertJsonStructure([
-                'message',
-            ]
-        );
+            ->assertJsonStructure(['message',]);
     }
 
 
@@ -233,7 +247,8 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testUpdateTicketReturnsCorrectData() {
+    public function testUpdateTicketReturnsCorrectData()
+    {
         $user = User::inRandomOrder()->first();
         $ticket = SeedService::createTicket();
         $payload = [
@@ -248,10 +263,7 @@ class TicketTest extends TestCase
         $this->actingAs($user)
             ->json('put', "/api/tickets/$ticket->id", $payload)
             ->assertStatus(Response::HTTP_OK)
-            ->assertJsonStructure([
-                'message',
-            ])
-        ;
+            ->assertJsonStructure(['message',]);
     }
 
     /**
@@ -259,7 +271,8 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testTicketUpdate404(): void {
+    public function testTicketUpdate404(): void
+    {
         $user = User::inRandomOrder()->first();
         $priority = Ticket::inRandomOrder()->first()->priority;
         $payload = [
@@ -275,10 +288,7 @@ class TicketTest extends TestCase
         $this->actingAs($user)
             ->json('put', "/api/tickets/$ticket_id", $payload)
             ->assertStatus(Response::HTTP_NOT_FOUND)
-            ->assertJsonStructure([
-                'message',
-            ])
-        ;
+            ->assertJsonStructure(['message',]);
     }
 
     /**
@@ -286,7 +296,8 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testTicketUpdateValidationFailed(): void {
+    public function testTicketUpdateValidationFailed(): void
+    {
         $ticket = SeedService::createTicket();
         $payload = [
             'title'        => Str::random(257),
@@ -300,11 +311,7 @@ class TicketTest extends TestCase
         $this->actingAs(User::inRandomOrder()->first())
             ->json('put', "/api/tickets/$ticket->id", $payload)
             ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->assertJsonStructure([
-                'message',
-                'errors',
-            ])
-        ;
+            ->assertJsonStructure(['message','errors',]);
     }
 
     /**
@@ -312,7 +319,8 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testTicketPriority404Failed(): void {
+    public function testTicketPriority404Failed(): void
+    {
         $user = User::inRandomOrder()->first();
         $ticket = SeedService::createTicket();
         $payload = [
@@ -327,10 +335,7 @@ class TicketTest extends TestCase
         $this->actingAs($user)
             ->json('put', "/api/tickets/$ticket->id", $payload)
             ->assertStatus(Response::HTTP_NOT_FOUND)
-            ->assertJsonStructure([
-                'message',
-            ])
-        ;
+            ->assertJsonStructure(['message',]);
     }
 
 
@@ -348,13 +353,13 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testTicketIsDeleted() {
+    public function testTicketIsDeleted()
+    {
         $ticket = SeedService::createTicket();
         $this->actingAs(User::inRandomOrder()->first())
             ->json('delete', "/api/tickets/$ticket->id")
             ->assertStatus(Response::HTTP_NO_CONTENT)
-            ->assertNoContent()
-        ;
+            ->assertNoContent();
         $ticket_array = $ticket->toArray();
         unset($ticket_array['status_name']);
         $this->assertDatabaseMissing('tickets', $ticket_array);
@@ -365,16 +370,14 @@ class TicketTest extends TestCase
      *
      * @return void
      */
-    public function testTicketDelete404(): void {
+    public function testTicketDelete404(): void
+    {
         $ticket_id = Ticket::max('id') + 1;
 
         $this->actingAs(User::inRandomOrder()->first())
             ->json('delete', "/api/tickets/$ticket_id")
             ->assertStatus(Response::HTTP_NOT_FOUND)
-            ->assertJsonStructure([
-                'message',
-            ]
-        );
+            ->assertJsonStructure(['message',]);
     }
 
 }

@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * Ticket.php
+ * php version 8.1.2
+ *
+ * @category Model
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,6 +17,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Ticket model (tickets can be assigned to users)
+ *
+ * @category Test
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
  */
 class Ticket extends Model
 {
@@ -18,7 +33,7 @@ class Ticket extends Model
      *
      * @var array
      */
-    private static $statuses = [
+    private static $_statuses = [
         0 => 'To Do',
         1 => 'In Progress',
         2 => 'Done',
@@ -59,8 +74,9 @@ class Ticket extends Model
      *
      * @return string
      */
-    public function getStatusNameAttribute(): string {
-        return self::$statuses[$this->status];
+    public function getStatusNameAttribute(): string
+    {
+        return self::$_statuses[$this->status];
     }
 
     /**
@@ -68,8 +84,9 @@ class Ticket extends Model
      *
      * @return array
      */
-    public static function getStatuses(): array {
-        return self::$statuses;
+    public static function getStatuses(): array
+    {
+        return self::$_statuses;
     }
 
 
@@ -87,7 +104,8 @@ class Ticket extends Model
      *
      * @return BelongsTo
      */
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 }

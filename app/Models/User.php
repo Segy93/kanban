@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * User.php
+ * php version 8.1.2
+ *
+ * @category Model
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
+ */
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -9,8 +18,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
 /**
- * User model (laravel default model)
+ * User Model (Laravel default model)
+ *
+ * @category Model
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
  */
 class User extends Authenticatable
 {
@@ -58,9 +74,12 @@ class User extends Authenticatable
     // Relations
 
     /**
-     * Get the tickets assigned for user.
+     * Get tickets assigned to user
+     *
+     * @return HasMany
      */
-    public function tickets(): HasMany {
+    public function tickets(): HasMany
+    {
         return $this->hasMany(Ticket::class);
     }
 }

@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * TicketController.php
+ * php version 8.1.2
+ *
+ * @category Controller
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
+ */
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
@@ -9,7 +18,15 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-/** CRUD methods for managing tickets */
+/**
+ * Crud methods for managing tickets
+ *
+ * @category Controller
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
+ */
 class TicketController extends Controller
 {
     // CREATE
@@ -17,11 +34,12 @@ class TicketController extends Controller
     /**
      * Creating single ticket
      *
-     * @param Request $request
+     * @param Request $request HTTP request
      *
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse {
+    public function store(Request $request): JsonResponse
+    {
         $ticket = new Ticket();
 
         $validated = TicketService::validateDataCreate($request);
@@ -35,7 +53,7 @@ class TicketController extends Controller
         $ticket->save();
 
         $data = ['message' => 'Ticket created'];
-        return JsonService::sendJsonResponse($data, Response::HTTP_CREATED);
+        return JsonService::sendResponse($data, Response::HTTP_CREATED);
     }
 
 
@@ -53,61 +71,65 @@ class TicketController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse {
+    public function index(): JsonResponse
+    {
         $tickets = Ticket::orderBy('priority')->get();
 
-        return JsonService::sendJsonResponse($tickets, Response::HTTP_OK);
+        return JsonService::sendResponse($tickets, Response::HTTP_OK);
     }
 
     /**
      * Fetches tickets by status
      *
-     * @param int $id    status
+     * @param int $id status
      *
      * @return JsonResponse
      */
-    public function lane(int $id): JsonResponse {
+    public function lane(int $id): JsonResponse
+    {
         if (!TicketService::validateStatus($id)) {
             $data = ['message' => 'Status not valid'];
-            return JsonService::sendJsonResponse($data, Response::HTTP_UNPROCESSABLE_ENTITY);
+            $response = Response::HTTP_UNPROCESSABLE_ENTITY;
+            return JsonService::sendResponse($data, $response);
         }
         $tickets = Ticket::where('status', $id)
             ->orderBy('priority')
-            ->get()
-        ;
+            ->get();
 
-        return JsonService::sendJsonResponse($tickets, Response::HTTP_OK);
+        return JsonService::sendResponse($tickets, Response::HTTP_OK);
     }
 
     /**
      * Fetch ticket by id
      *
-     * @param int $id    id of ticket
+     * @param int $id id of ticket
      *
      * @return JsonResponse
      */
-    public function show(int $id): JsonResponse {
+    public function show(int $id): JsonResponse
+    {
         $ticket = Ticket::where('id', $id)->with('user')->first();
 
         if (!empty($ticket)) {
-            return JsonService::sendJsonResponse([$ticket], Response::HTTP_OK);
+            return JsonService::sendResponse([$ticket], Response::HTTP_OK);
         } else {
             $data = ['message' => 'Ticket not found'];
-            return JsonService::sendJsonResponse($data, Response::HTTP_NOT_FOUND);
+            return JsonService::sendResponse($data, Response::HTTP_NOT_FOUND);
         }
     }
 
     /**
      * Search tickets
      *
-     * @param string $search    String used for searching
+     * @param string $search String used for searching
      *
      * @return JsonResponse
      */
-    public function search(string $search): JsonResponse {
+    public function search(string $search): JsonResponse
+    {
         $tickets = Ticket::where('title', 'like', '%' . $search . '%')->get();
 
-        return JsonService::sendJsonResponse($tickets, Response::HTTP_OK);
+        return JsonService::sendResponse($tickets, Response::HTTP_OK);
     }
 
 
@@ -123,12 +145,13 @@ class TicketController extends Controller
     /**
      * Updating of single ticket
      *
-     * @param Request   $request
-     * @param int       $id
+     * @param Request $request HTTP request
+     * @param int     $id      Ticket id
      *
      * @return JsonResponse
      */
-    public function update(Request $request, int $id): JsonResponse {
+    public function update(Request $request, int $id): JsonResponse
+    {
         $ticket = Ticket::find($id);
 
         $validated = TicketService::validateDataUpdate($request, $id);
@@ -148,21 +171,22 @@ class TicketController extends Controller
             if (!is_null($validated['priority_new'])) {
                 $reorder = TicketService::reorder($validated['priority_old'], $validated['priority_new']);
             }
-            /** user_id mandatory parameter since user can be unassigned, then the value is null */
+
+            // user_id mandatory parameter since user can be unassigned, then the value is null
             $ticket->user_id = $validated['user_id'];
 
             $ticket->save();
 
             if ($reorder === false) {
                 $data = ['message' => 'Ticket by priority not found'];
-                return JsonService::sendJsonResponse($data, Response::HTTP_NOT_FOUND);
+                return JsonService::sendResponse($data, Response::HTTP_NOT_FOUND);
             }
 
             $data = ['message' => 'Ticket updated'];
-            return JsonService::sendJsonResponse($data, Response::HTTP_OK);
+            return JsonService::sendResponse($data, Response::HTTP_OK);
         } else {
             $data = ['message' => 'Ticket not found'];
-            return JsonService::sendJsonResponse($data, Response::HTTP_NOT_FOUND);
+            return JsonService::sendResponse($data, Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -179,21 +203,22 @@ class TicketController extends Controller
     /**
      * Deleting single record
      *
-     * @param int $id    Id of deleting record
+     * @param int $id Id of deleting record
      *
      * @return JsonResponse
      */
-    public function delete(int $id): JsonResponse {
+    public function delete(int $id): JsonResponse
+    {
         $ticket = Ticket::find($id);
 
         if (!empty($ticket)) {
             $ticket->delete();
 
             $data = ['message' => 'Ticket deleted'];
-            return JsonService::sendJsonResponse($data, Response::HTTP_NO_CONTENT);
+            return JsonService::sendResponse($data, Response::HTTP_NO_CONTENT);
         } else {
             $data = ['message' => 'Ticket not found'];
-            return JsonService::sendJsonResponse($data, Response::HTTP_NOT_FOUND);
+            return JsonService::sendResponse($data, Response::HTTP_NOT_FOUND);
         }
     }
 }

@@ -1,10 +1,28 @@
 <?php
-
+/**
+ * TicketHistory.php
+ * php version 8.1.2
+ *
+ * @category Model
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
+ */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Ticket history model
+ *
+ * @category Model
+ * @package  Laravel
+ * @author   Sergej Sjekloca <segy993@gmail.com>
+ * @license  No license
+ * @link     https://github.com/Segy93/kanban
+ */
 class TicketHistory extends Model
 {
     use HasFactory;
