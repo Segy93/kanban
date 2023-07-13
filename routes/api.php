@@ -23,47 +23,50 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [LoginController::class, 'authenticate']);
 
-Route::middleware('auth:sanctum')->group(function () {
-    /** tickets */
+Route::middleware('auth:sanctum')
+    ->group(
+        function () {
+
+            // tickets
 
 
-    // CREATE
-    Route::post('/tickets', [TicketController::class, 'store']);
+            // CREATE
+            Route::post('/tickets', [TicketController::class, 'store']);
 
-    // READ
-    Route::get('/tickets', [TicketController::class, 'index']);
-    Route::get('/tickets/status/{id}', [TicketController::class, 'lane']);
-    Route::get('/tickets/{id}', [TicketController::class, 'show']);
-    Route::get('/tickets/search/{search}', [TicketController::class, 'search']);
+            // READ
+            Route::get('/tickets', [TicketController::class, 'index']);
+            Route::get('/tickets/status/{id}', [TicketController::class, 'lane']);
+            Route::get('/tickets/{id}', [TicketController::class, 'show']);
+            Route::get('/tickets/search/{search}', [TicketController::class, 'search']);
 
-    // UPDATE
-    Route::put('/tickets/{id}', [TicketController::class, 'update']);
+            // UPDATE
+            Route::put('/tickets/{id}', [TicketController::class, 'update']);
 
-    // DELETE
-    Route::delete('/tickets/{id}', [TicketController::class, 'delete']);
-
-
-
-
-
-
+            // DELETE
+            Route::delete('/tickets/{id}', [TicketController::class, 'delete']);
 
 
 
-    /** users */
 
 
-    // CREATE
-    Route::post('/users', [UserController::class, 'store']);
 
-    // READ
-    Route::get('/users', [UserController::class, 'index']);
-    Route::get('/users/{id}', [UserController::class, 'show']);
-    Route::get('/users/search/{search}', [UserController::class, 'search']);
 
-    // UPDATE
-    Route::put('/users/{id}', [UserController::class, 'update']);
 
-    // DELETE
-    Route::delete('/users/{id}', [UserController::class, 'delete']);
+
+            // users
+
+
+            // CREATE
+            Route::post('/users', [UserController::class, 'store']);
+
+            // READ
+            Route::get('/users', [UserController::class, 'index']);
+            Route::get('/users/{id}', [UserController::class, 'show']);
+            Route::get('/users/search/{search}', [UserController::class, 'search']);
+
+            // UPDATE
+            Route::put('/users/{id}', [UserController::class, 'update']);
+
+            // DELETE
+            Route::delete('/users/{id}', [UserController::class, 'delete']);
 });
